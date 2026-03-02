@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>MS Cyber</title>
+    <link rel="icon" type="image/png" href="31.png">
+kiwa.html
+<link rel="apple-touch-icon" href="31.png">
+
+<link rel="shortcut icon" href="31.png">
+</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MS CYBER | Elite Digital Government & Online services Portal</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.4);
+            --accent: #f59e0b;
+            --bg-body: #020617;
+            --bg-glass: rgba(15, 23, 42, 0.8);
+            --border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --success: #10b981;
+            --warning: #facc15;
+            --error: #ef4444;
+            --radius-xl: 28px;
+            --radius-md: 16px;
+            --transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- Global Foundations --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg-body); color: var(--text-main); line-height: 1.7; overflow-x: hidden; scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        /* --- System Top Bar & Ticker --- */
+        .system-ticker {
+            position: fixed; top: 0; width: 100%; height: 45px;
+            background: rgba(2, 6, 23, 0.9); backdrop-filter: blur(20px);
+            z-index: 5000; display: flex; align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .ticker-brand {
+            background: linear-gradient(90deg, var(--primary), #8b5cf6);
+            color: white; padding: 0 2rem; height: 100%;
+            display: flex; align-items: center; font-size: 0.75rem;
+            font-weight: 800; letter-spacing: 2px; text-transform: uppercase; z-index: 10;
+        }
+        .ticker-scroll-area { flex: 1; overflow: hidden; }
+        .ticker-content {
+            display: inline-block; white-space: nowrap; padding-left: 100%;
+            animation: tickerFlow 35s linear infinite; font-weight: 600; font-size: 0.85rem;
+        }
+        @keyframes tickerFlow { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        /* --- VIP Navigation --- */
+        nav {
+            position: fixed; top: 45px; width: 100%; padding: 1.5rem 8%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 4000; transition: var(--transition);
+        }
+        nav.sticky { background: rgba(2, 6, 23, 0.95); padding: 1rem 8%; border-bottom: 1px solid var(--border); }
+        .logo { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 900; color: #fff; text-decoration: none; }
+        .logo span { color: var(--primary); text-shadow: 0 0 15px var(--primary-glow); }
+        .nav-links { display: flex; gap: 3rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text-dim); font-size: 0.9rem; font-weight: 600; transition: 0.3s; position: relative; }
+        .nav-links a:hover, .nav-links a.active { color: #fff; }
+        .nav-links a.active::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 100%; height: 2px; background: var(--primary); box-shadow: 0 0 10px var(--primary); }
+
+        /* --- Hero: The Executive Experience --- */
+        .hero {
+            height: 100vh; display: flex; align-items: center; justify-content: center;
+            padding: 120px 8% 60px; position: relative; overflow: hidden;
+            background: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.15), transparent),
+                        radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1), transparent);
+        }
+        .hero-image-bg {
+            position: absolute; top: 0; right: 0; width: 50%; height: 100%;
+            background: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2026') no-repeat center center/cover;
+            mask-image: linear-gradient(to left, rgba(0,0,0,1), transparent);
+            opacity: 0.3; z-index: 1;
+        }
+        .hero-inner { position: relative; z-index: 10; width: 100%; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 10px; padding: 8px 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 50px; margin-bottom: 2rem; font-size: 0.8rem; font-weight: 700; color: var(--primary); }
+        .hero-inner h1 { font-size: clamp(3rem, 7vw, 5.5rem); line-height: 1; font-weight: 900; margin-bottom: 2rem; letter-spacing: -3px; }
+        .hero-inner h1 span { background: linear-gradient(90deg, #fff, #60a5fa);-webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .btn {
+            padding: 1.2rem 2.8rem; border-radius: var(--radius-md); font-weight: 800; cursor: pointer;
+            transition: var(--transition); text-decoration: none; display: inline-flex; align-items: center; gap: 12px; border: none; font-size: 1rem;
+        }
+        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 20px 40px var(--primary-glow); }
+        .btn-primary:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 25px 50px var(--primary-glow); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: #fff; }
+        .btn-outline:hover { background: rgba(255,255,255,0.05); border-color: var(--primary); }
+
+        /* --- Premium Sections --- */
+        section { padding: 120px 8%; position: relative; }
+        .section-tag { font-size: 0.75rem; font-weight: 900; color: var(--primary); text-transform: uppercase; letter-spacing: 4px; display: block; margin-bottom: 1rem; text-align: center; }
+        .section-title { font-size: 3.5rem; font-weight: 800; text-align: center; margin-bottom: 5rem; font-family: 'Orbitron'; letter-spacing: -2px; }
+        
+        .glass-card { 
+            background: var(--bg-glass); backdrop-filter: blur(25px); 
+            border: 1px solid var(--border); border-radius: var(--radius-xl); 
+            padding: 3.5rem; transition: var(--transition);
+        }
+        .glass-card:hover { border-color: var(--primary); box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
+
+        /* --- VIP Review Architecture --- */
+        .review-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2.5rem; }
+        .vip-review { position: relative; overflow: hidden; }
+        .vip-review::before { content: '\f10e'; family : "Font Awesome 6 Free"; weight: 900; position: absolute; top: 20px; right: 30px; font-size: 4rem; opacity: 0.03; }
+        .stars { color: var(--accent); margin-bottom: 1.5rem; display: flex; gap: 5px; }
+        .review-text { font-size: 1.1rem; color: var(--text-dim); font-style: italic; margin-bottom: 2.5rem; }
+        .user-identity { display: flex; align-items: center; gap: 1.2rem; }
+        .user-avatar { 
+            width: 65px; height: 65px; border-radius: 50%; 
+            background: linear-gradient(135deg, var(--primary), #a855f7);
+            display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.4rem;
+            border: 3px solid var(--border); box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* --- Dynamic Application Form --- */
+        .app-form-wrap { max-width: 900px; margin: 0 auto; }
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .field-group { display: flex; flex-direction: column; gap: 0.8rem; }
+        label { font-size: 0.75rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; padding-left: 5px; }
+        input, select, textarea {
+            background: rgba(2, 6, 23, 0.6); border: 1px solid var(--border);
+            padding: 1.2rem 1.5rem; border-radius: var(--radius-md); color: #fff;
+            font-size: 1rem; transition: var(--transition);
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); outline: none; background: rgba(59, 130, 246, 0.05); }
+        .other-service-box { display: none; margin-top: 1.5rem; animation: slideDown 0.4s ease forwards; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Elite Admin Environment --- */
+        .admin-view { position: fixed; inset: 0; background: #010409; z-index: 9999; display: none; padding: 40px; overflow-y: auto; }
+        .admin-sidebar { width: 280px; height: 100vh; background: #0d1117; position: fixed; left: 0; top: 0; padding: 40px 20px; border-right: 1px solid var(--border); }
+        .admin-main { margin-left: 280px; padding-bottom: 100px; }
+        .status-pill { padding: 6px 14px; border-radius: 50px; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+        
+        /* New Order Lifecycle Colors */
+        .st-draft { background: rgba(148, 163, 184, 0.1); color: #94a3b8; }
+        .st-pending { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+        .st-processing { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .st-verified { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+        .st-completed { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+
+        .admin-table { width: 100%; border-collapse: separate; border-spacing: 0 12px; }
+        .admin-table th { text-align: left; padding: 1rem; color: var(--text-dim); font-size: 0.7rem; text-transform: uppercase; }
+        .admin-table td { background: rgba(255,255,255,0.02); padding: 1.5rem 1rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .admin-table td:first-child { border-left: 1px solid var(--border); border-radius: 16px 0 0 16px; }
+        .admin-table td:last-child { border-right: 1px solid var(--border); border-radius: 0 16px 16px 0; }
+
+        /* --- Location & Footer --- */
+        .location-section { text-align: center; }
+        .map-box { 
+            height: 400px; border-radius: var(--radius-xl); border: 1px solid var(--border); 
+            overflow: hidden; margin-top: 3rem; background: rgba(255,255,255,0.03);
+            display: flex; align-items: center; justify-content: center;
+        }
+        footer { padding: 80px 8% 40px; border-top: 1px solid var(--border); text-align: center; }
+
+        /* --- Chat Module --- */
+        .chat-hub { position: fixed; bottom: 40px; right: 40px; z-index: 6000; }
+        .chat-btn { 
+            width: 70px; height: 70px; background: var(--primary); border-radius: 24px; 
+            display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white;
+            cursor: pointer; box-shadow: 0 15px 40px var(--primary-glow); transition: var(--transition);
+        }
+        .chat-btn:hover { transform: translateY(-5px) rotate(5deg); }
+
+        @media (max-width: 900px) {
+            .nav-links, .hero-image-bg { display: none; }
+            .input-row { grid-template-columns: 1fr; }
+            .hero-inner h1 { font-size: 3.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="system-ticker">
+        <div class="ticker-brand"><i class="fas fa-microchip"></i> MS Services</div>
+        <div class="ticker-scroll-area">
+            <div class="ticker-content" id="live-broadcast">Initializing secure terminal... 2026 KRA Individual & Company returns are now processing. System uptime: 99.9%.</div>
+        </div>
+    </div>
+
+    <nav id="navbar">
+        <a href="#" class="logo">MS <span>CYBER</span></a>
+        <ul class="nav-links">
+            <li><a href="#home" class="active">Terminal</a></li>
+            <li><a href="#services">Capabilities</a></li>
+            <li><a href="#reviews">Reputation</a></li>
+            <li><a href="#track">Tracking</a></li>
+            <li><a href="#location">Location</a></li>
+            <li><a href="help.html">Help</a></li>
+        </ul>
+        <div style="display: flex; gap: 15px;">
+            <a href="#" onclick="toggleAuth(true)" class="btn btn-outline" style="padding: 0.6rem 1.4rem; font-size: 0.8rem;"><i class="fas fa-lock-open"></i> Staff</a>
+            <a href="#apply" class="btn btn-primary" style="padding: 0.6rem 1.4rem; font-size: 0.8rem;">Order Now!!!</a>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="hero-image-bg"></div>
+        <div class="hero-inner">
+            <div class="hero-badge"><i class="fas fa-shield-halved"></i> Verified Digital Service Provider</div>
+            <h1>Elite <span>Digital</span><br>Services.</h1>
+            <p style="max-width: 600px; color: var(--text-dim); font-size: 1.2rem; margin-bottom: 3rem;">Kamwangi's premier gateway for secure government filings. We handle the complexity, you enjoy the results.</p>
+            <div style="display: flex; gap: 20px;">
+                <a href="#apply" class="btn btn-primary">Start New Session</a>
+                <a href="#services" class="btn btn-outline">Explore Capabilities</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="services">
+        <span class="section-tag">Service Spectrum</span>
+        <h2 class="section-title">Core Operations</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem;">
+            <div class="glass-card">
+                <i class="fas fa-fingerprint fa-3x" style="color: var(--primary); margin-bottom: 2rem;"></i>
+                <h3 style="font-size: 1.6rem; margin-bottom: 1rem;">E-Citizen Services</h3>
+                <p style="color: var(--text-dim);">Certificates of Good Conduct, Business name registration, and Passport processing with 24h feedback.</p>
+            </div>
+            <div class="glass-card">
+                <i class="fas fa-file-contract fa-3x" style="color: var(--primary); margin-bottom: 2rem;"></i>
+                <h3 style="font-size: 1.6rem; margin-bottom: 1rem;">KRA Services</h3>
+                <p style="color: var(--text-dim);">Individual returns, VAT, Excise duty, and specialized tax waiver applications for 2026 season.</p>
+            </div>
+            <div class="glass-card">
+                <i class="fas fa-id-card-clip fa-3x" style="color: var(--primary); margin-bottom: 2rem;"></i>
+                <h3 style="font-size: 1.6rem; margin-bottom: 1rem;">NTSA Services</h3>
+                <p style="color: var(--text-dim);">Smart DL renewals, Logbook transfers, and TIMS account recovery with expert speed.</p>
+            </div>
+            <div class="glass-card">
+                <i class="fas fa-file-contract fa-3x" style="color: var(--primary); margin-bottom: 2rem;"></i>
+                <h3 style="font-size: 1.6rem; margin-bottom: 1rem;">Graphic Design</h3>
+                <p style="color: var(--text-dim);">Business Card, Wedding Card, Graduation card, Parking Slot Card, Eulogy Designing Logo desiging and also Printing done here professional and Fast.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="reviews" style="background: rgba(255,255,255,0.01);">
+        <span class="section-tag">Client Testimonials</span>
+        <h2 class="section-title">Client Review</h2>
+        <div class="review-grid">
+            <div class="glass-card vip-review">
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p class="review-text">"Absolute professionalism. I have been using MS Cyber for all my company KRA returns since 2023. Peter is exceptionally fast."</p>
+                <div class="user-identity">
+                    <div class="user-avatar">
+    <img src="https://i.pravatar.cc/150?img=3" alt="User Profile">
+</div>
+    <style>.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}</style>
+                    <div><h4 style="margin:0;">Moses Karanja <span class="verified-icon">✔</span></h4><small style="color: var(--primary);">Managing Director</small></div>
+                <style>.verified-icon {
+    background-color: #1DA1F2;
+    color: white;
+    font-size: 10px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 6px;
+}</style>
+                </div>
+            </div>
+            <div class="glass-card vip-review">
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p class="review-text">"Response is on time. Thank you."</p>
+                <div class="user-identity">
+                    <div class="user-avatar">
+    <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="User Profile">
+</div>
+                    <div><h4 style="margin:0;">Jacob makokha <span class="verified-icon">✔</span></h4><small style="color: var(--primary);">Teacher</small></div>
+                <style>.verified-icon {
+    background-color: #1DA1F2;
+    color: white;
+    font-size: 10px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 6px;
+}</style>
+                </div>
+            </div>
+            <div class="glass-card vip-review">
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p class="review-text">"Very convient prices for services."</p>
+                <div class="user-identity">
+                    <div class="user-avatar">
+        <img src="https://randomuser.me/api/portraits/men/41.jpg" alt="Male User">
+</div>
+                    <div><h4 style="margin:0;">Travis Mburu <span class="verified-icon">✔</span></h4><small style="color: var(--primary);">Teacher</small></div>
+                <style>.verified-icon {
+    background-color: #1DA1F2;
+    color: white;
+    font-size: 10px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 6px;
+}</style>
+                </div>
+        </div>
+        <div class="glass-card vip-review">
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p class="review-text">"I love the response is friendly."</p>
+                <div class="user-identity">
+                    <div class="user-avatar">
+    <img src="https://randomuser.me/api/portraits/women/12.jpg" alt="User Profile">
+</div>
+                    <div><h4 style="margin:0;">Hannah Nyambura <span class="verified-icon">✔</span></h4><small style="color: var(--primary);">Lawyer</small></div>
+                <style>.verified-icon {
+    background-color: #1DA1F2;
+    color: white;
+    font-size: 10px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 6px;
+}</style>
+                </div>
+                </div>
+        <div class="glass-card vip-review">
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p class="review-text">"The order tracking system is a game changer. I knew exactly when my Driving linces was ready without leaving home."</p>
+                <div class="user-identity">
+                    <div class="user-avatar">EN</div>
+                    <div><h4 style="margin:0;">Elijah Nyabuto <span class="verified-icon">✔</span></h4><small style="color: var(--primary);">Engineer</small></div>
+                
+                <style>.verified-icon {
+    background-color: #1DA1F2;
+    color: white;
+    font-size: 10px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 6px;
+}</style></div>
+                </div>
+        <div class="glass-card vip-review">
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p class="review-text">"The order tracking system is a game changer. I knew exactly when my Marriege certificate was ready without leaving home."</p>
+                <div class="user-identity">
+                    <div class="user-avatar">IO</div>
+                    <div><h4 style="margin:0;">Isaac Onyango <span class="verified-icon">✔</span></h4><small style="color: var(--primary);">Student</small></div>
+                <style>.verified-icon {
+    background-color: #1DA1F2;
+    color: white;
+    font-size: 10px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 6px;
+}</style>
+                </div>
+                </div>
+        <div class="glass-card vip-review">
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p class="review-text">"I got my cv on time ."</p>
+                <div class="user-identity">
+                    <div class="user-avatar">MK</div>
+                    <div><h4 style="margin:0;">mary Kiptum <span class="verified-icon">✔</span></h4><small style="color: var(--primary);">Nurse</small></div> 
+                    <style>.verified-icon {
+    background-color: #1DA1F2;
+    color: white;
+    font-size: 10px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 6px;
+}</style>
+                </div>
+    </section>
+
+    <section id="apply">
+        <div class="glass-card app-form-wrap">
+            <div style="text-align: center; margin-bottom: 3.5rem;">
+                <h2 style="font-family: 'Orbitron'; font-size: 2.5rem; margin-bottom: 1rem;">Digital Intake</h2>
+                <p style="color: var(--text-dim);">Complete the manifest below to begin processing your request.</p>
+            </div>
+            <form id="main-app-form">
+                <div class="input-row">
+                    <div class="field-group">
+                        <label>Legal Identity</label>
+                        <input type="text" id="f-name" placeholder="Full Name as per ID" required>
+                    </div>
+                    <div class="field-group">
+                        <label>Secure Contact (WhatsApp)</label>
+                        <input type="tel" id="f-phone" placeholder="07XX XXX XXX" required>
+                    </div>
+                </div>
+                <div class="field-group">
+                    <label>Operation Category</label>
+                    <select id="f-service" onchange="checkOther(this.value)">
+                        <option value="KRA Return">KRA Tax Return</option>
+                        <option value="NTSA Smart DL">NTSA Smart DL</option>
+                        <option value="Good Conduct">Good Conduct Certificate</option>
+                        <option value="Business Registration">Business Registration</option>
+                        <option value="HELB Application">HELB Financial Aid</option>
+                        <option value="OTHER">--- OTHER (Explain Below) ---</option>
+                    </select>
+                </div>
+
+                <div id="other-service-box" class="other-service-box">
+                    <div class="field-group">
+                        <label>Specify Your Request</label>
+                        <input type="text" id="f-other" placeholder="Explain the service you need here...">
+                    </div>
+                </div>
+
+                <div class="field-group" style="margin-top: 1.5rem;">
+                    <label>Supporting Data / Credentials</label>
+                    <textarea id="f-notes" rows="4" placeholder="Enter ID Numbers, KRA PINs, or specific deadlines..."></textarea>
+                </div>
+                
+                <button type="submit" id="submit-btn" class="btn btn-primary" style="width: 100%; margin-top: 2rem;">Initialize Manifest Session</button>
+            </form>
+
+            <div id="success-view" style="display: none; text-align: center; padding: 2rem 0;">
+                <i class="fas fa-check-double fa-5x" style="color: var(--success); margin-bottom: 2rem;"></i>
+                <h2 style="font-family: 'Orbitron'; margin-bottom: 1rem;">Session Synced</h2>
+                <p>Your unique Order Manifest ID:</p>
+                <div id="manifest-id" style="font-family: 'JetBrains Mono'; font-size: 3.5rem; color: var(--accent); margin: 2rem 0; letter-spacing: 5px;"></div>
+                <p style="color: var(--text-dim); font-size: 0.8rem;">Please save this ID to track your progress in the terminal.</p>
+                <button onclick="location.reload()" class="btn btn-outline" style="margin-top: 2rem;">Refresh Session</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="track">
+        <div class="glass-card" style="max-width: 700px; margin: 0 auto; text-align: center;">
+            <h2 style="font-family: 'Orbitron'; margin-bottom: 2rem;">Order Terminal</h2>
+            <form id="track-form" style="display: flex; gap: 10px;">
+                <input type="text" id="track-id" placeholder="Enter Manifest ID (e.g., MS-4491)" required style="margin-bottom: 0;">
+                <button type="submit" class="btn btn-primary" style="padding: 1rem 2rem;">Verify</button>
+            </form>
+            <div id="track-res" style="display: none; margin-top: 3rem; text-align: left; padding-top: 2rem; border-top: 1px solid var(--border);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h3 id="res-name" style="font-size: 1.5rem;"></h3>
+                    <span id="res-status" class="status-pill"></span>
+                </div>
+                <div style="background: rgba(255,255,255,0.03); padding: 2rem; border-radius: var(--radius-md); border-left: 5px solid var(--primary);">
+                    <label style="color: var(--primary);">Administrator Advisory</label>
+                    <p id="res-msg" style="margin-top: 8px; font-weight: 500;"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   <section id="operations-hub" style="padding: 60px 20px; max-width: 1200px; margin: 0 auto;">
+    
+    <div style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; border-left: 4px solid #facc15; padding-left: 20px;">
+        <div>
+            <span style="font-family: 'Orbitron'; color: #facc15; font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase;">Strategic Location</span>
+            <h2 style="font-family: 'Orbitron'; font-size: 2.2rem; color: #fff; margin-top: 5px;">OPERATIONS CENTER</h2>
+        </div>
+        <div style="text-align: right; background: rgba(255,255,255,0.05); padding: 10px 20px; border-radius: 15px; border: 1px solid rgba(250,204,21,0.3);">
+            <div style="color: #facc15; font-weight: 900; font-size: 1.2rem;">
+                <i class="fas fa-star"></i> 5.0
+            </div>
+            <div style="font-size: 0.6rem; color: #94a3b8; font-family: 'Orbitron';">GOOGLE VERIFIED</div>
+        </div>
+    </div>
+
+    <div class="ops-card" style="
+        background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 40px;
+        overflow: hidden;
+        backdrop-filter: blur(25px);
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+    ">
+        
+        <div style="border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column;">
+            <div style="width: 100%; height: 250px; background: url('31.png') center/cover; position: relative; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <div style="position: absolute; bottom: 15px; left: 15px; background: rgba(0,0,0,0.7); padding: 5px 12px; border-radius: 50px; font-size: 0.6rem; font-family: 'Orbitron'; color: #facc15; border: 1px solid #facc15;">
+                    OFFICIAL TERMINAL IMAGE
+                </div>
+            </div>
+
+            <div style="padding: 40px;">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                    <div style="width: 10px; height: 10px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 15px #22c55e; animation: pulse 2s infinite;"></div>
+                    <span style="font-size: 0.7rem; font-weight: 800; color: #94a3b8; letter-spacing: 1px;">HQ UPLINK ACTIVE</span>
+                </div>
+
+                <h3 style="font-size: 2.2rem; font-family: 'Orbitron'; margin-bottom: 10px; color: #fff;">Kamwangi, KE</h3>
+                <p style="color: #94a3b8; font-size: 1rem; line-height: 1.6; margin-bottom: 25px;">
+                    Strategic hub located next to <b>Tobit Oil Station</b>. Providing secure document and digital services.
+                </p>
+
+                <a href="https://maps.app.goo.gl/y5P8e7pXqN9o6m9m8" target="_blank" style="
+                    background: #facc15; color: #000; text-decoration: none; padding: 18px; 
+                    border-radius: 15px; font-family: 'Orbitron'; font-weight: 900; 
+                    text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px;
+                    box-shadow: 0 10px 30px rgba(250, 204, 21, 0.2); transition: 0.3s;
+                ">
+                    <i class="fas fa-location-arrow"></i> INITIATE GPS TRACE
+                </a>
+            </div>
+        </div>
+
+        <div style="position: relative; background: #000;">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.130985244198!2d36.9360879!3d-1.0621415!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f9a625c449a07%3A0x345709d9bb19960b!2sMS%20Cyber%20Services%20Kamwangi!5e0!3m2!1sen!2ske!4v1709540000000!5m2!1sen!2ske" 
+                width="100%" height="100%" 
+                style="border:0; filter: invert(90%) hue-rotate(180deg) brightness(90%);" 
+                allowfullscreen="" loading="lazy">
+            </iframe>
+            <div style="position: absolute; top: 20px; right: 20px; background: rgba(2,6,23,0.8); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); font-size: 0.6rem; color: #94a3b8; font-family: 'Orbitron';">
+                SATELLITE SYNC: 100%
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+        70% { transform: scale(1.2); box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+</style>
+
+    <footer>
+        <h1 class="logo" style="margin-bottom: 2rem;">MS <span>CYBER</span></h1>
+        <p style="color: var(--text-dim); max-width: 500px; margin: 0 auto 2rem;">Elite digital portal providing secure access to Kenya's government portals. Professionalism in every byte.</p>
+        <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 3rem; font-size: 1.5rem;">
+            <i class="fab fa-whatsapp" style="cursor: pointer; color: var(--text-dim);"></i>
+            <i class="fab fa-facebook-f" style="cursor: pointer; color: var(--text-dim);"></i>
+            <i class="fab fa-instagram" style="cursor: pointer; color: var(--text-dim);"></i>
+        </div>
+        <p style="font-size: 0.7rem; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase;">&copy; 2026 MS Cyber Enterprise Infrastructure | Developed by Peter N Kuria</p>
+    </footer>
+
+    <div id="staff-auth" style="position: fixed; inset: 0; background: rgba(1, 4, 9, 0.98); z-index: 9000; display: none; align-items: center; justify-content: center;">
+        <div class="glass-card" style="width: 400px; text-align: center;">
+            <i class="fas fa-fingerprint fa-4x" style="color: var(--primary); margin-bottom: 2rem;"></i>
+            <h2 style="font-family: 'Orbitron'; margin-bottom: 2rem;">Staff Gateway</h2>
+            <input type="email" id="adm-email" placeholder="picyberm@gmail.com" style="margin-bottom: 1rem;">
+            <input type="password" id="adm-pass" placeholder="••••••••">
+            <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" onclick="attemptStaffLogin()">Authorize Access</button>
+            <p style="margin-top: 1.5rem; cursor: pointer; color: var(--text-dim);" onclick="toggleAuth(false)">Return to Terminal</p>
+        </div>
+    </div>
+
+    <div id="admin-panel" class="admin-view">
+        <div class="admin-sidebar">
+            <h1 class="logo" style="margin-bottom: 3rem;">CORE <span>HUB</span></h1>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <button class="btn btn-outline" style="justify-content: flex-start; width: 100%; border: none; background: rgba(59, 130, 246, 0.1);"><i class="fas fa-table-list"></i> Manifests</button>
+                <a href="insight.html" style="text-decoration: none; display: block; width: 100%;">
+    <button class="btn btn-outline" style="justify-content: flex-start; width: 100%; border: none; display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-chart-line"></i> Analytics
+    </button>
+</a>
+                <button class="btn btn-outline" style="justify-content: flex-start; width: 100%; border: none;" onclick="logoutStaff()"><i class="fas fa-power-off"></i> Terminate Session</button>
+            </div>
+        </div>
+        
+        <div class="admin-main">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+                <h2 style="font-family: 'Orbitron';">Active Manifest Queue</h2>
+                <div style="display: flex; gap: 15px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; border: 1px solid var(--border);">
+                    <input type="text" id="news-update" placeholder="Global ticker broadcast..." style="margin: 0; width: 300px;">
+                    <button class="btn btn-primary" style="padding: 0 1.5rem;" onclick="broadcastNews()">Push</button>
+                </div>
+            </div>
+
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Reference</th>
+                        <th>Client/Identity</th>
+                        <th>Service Logic</th>
+                        <th>Lifecycle Stage</th>
+                        <th>Advisory Msg</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, query, where, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // CONFIGURATION
+        const firebaseConfig = {
+            apiKey: "AIzaSyAqPGDu8ZzHski-wi9PtoCw39jfNgsR5fM",
+            authDomain: "ms-cyber.firebaseapp.com",
+            projectId: "ms-cyber",
+            storageBucket: "ms-cyber.firebasestorage.app",
+            messagingSenderId: "189332452684",
+            appId: "1:189332452684:web:ff6ab7e43d72db667ecbe9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- GLOBAL TICKER ---
+        onSnapshot(doc(db, "config", "ticker"), (snap) => {
+            if(snap.exists()) document.getElementById('live-broadcast').innerText = snap.data().text;
+        });
+
+        window.broadcastNews = async () => {
+            const v = document.getElementById('news-update').value;
+            if(v) await setDoc(doc(db, "config", "ticker"), { text: v });
+            document.getElementById('news-update').value = "";
+        };
+
+        // --- DYNAMIC FORM HANDLER ---
+        window.checkOther = (val) => {
+            const box = document.getElementById('other-service-box');
+            box.style.display = val === 'OTHER' ? 'block' : 'none';
+        };
+
+        // --- DATA INITIALIZATION (APPLY) ---
+        document.getElementById('main-app-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.innerText = "Encrypting & Syncing...";
+            btn.disabled = true;
+
+            const manifestId = "MS-" + Math.floor(1000 + Math.random() * 8999);
+            const serviceType = document.getElementById('f-service').value;
+            const finalService = serviceType === 'OTHER' ? document.getElementById('f-other').value : serviceType;
+
+            try {
+                await addDoc(collection(db, "orders"), {
+                    manifestId: manifestId,
+                    name: document.getElementById('f-name').value,
+                    phone: document.getElementById('f-phone').value,
+                    service: finalService,
+                    notes: document.getElementById('f-notes').value,
+                    status: "draft",
+                    adminMsg: "Initializing order. Please wait for staff verification.",
+                    timestamp: new Date()
+                });
+
+                document.getElementById('manifest-id').innerText = manifestId;
+                document.getElementById('main-app-form').style.display = 'none';
+                document.getElementById('success-view').style.display = 'block';
+            } catch (err) {
+                alert("Terminal Error: " + err.message);
+                btn.disabled = false;
+            }
+        };
+
+        // --- TERMINAL TRACKING ---
+        document.getElementById('track-form').onsubmit = (e) => {
+            e.preventDefault();
+            const id = document.getElementById('track-id').value.trim().toUpperCase();
+            const q = query(collection(db, "orders"), where("manifestId", "==", id));
+            
+            onSnapshot(q, (snap) => {
+                const res = document.getElementById('track-res');
+                res.style.display = 'block';
+                if(!snap.empty) {
+                    const d = snap.docs[0].data();
+                    document.getElementById('res-name').innerText = "Session: " + d.name;
+                    document.getElementById('res-msg').innerText = d.adminMsg;
+                    const b = document.getElementById('res-status');
+                    b.innerText = d.status;
+                    b.className = `status-pill st-${d.status}`;
+                } else {
+                    document.getElementById('res-name').innerText = "Record Not Found";
+                    document.getElementById('res-msg').innerText = "The ID entered does not match our records. Verify and try again.";
+                }
+            });
+        };
+
+        // --- ELITE STAFF LOGIC ---
+        window.attemptStaffLogin = () => {
+            const e = document.getElementById('adm-email').value;
+            const p = document.getElementById('adm-pass').value;
+            if(e === "picyberm@gmail.com" && p === "@Peter918kuria") {
+                sessionStorage.setItem('staff_jwt', 'active_session');
+                initAdminHub();
+            } else {
+                alert("Security credentials rejected.");
+            }
+        };
+
+        function initAdminHub() {
+            document.getElementById('staff-auth').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
+            
+            onSnapshot(collection(db, "orders"), (snap) => {
+                const body = document.getElementById('admin-body');
+                body.innerHTML = "";
+                snap.forEach(s => {
+                    const d = s.data();
+                    body.innerHTML += `
+                        <tr>
+                            <td><strong style="color:var(--primary); font-family:'JetBrains Mono';">${d.manifestId}</strong></td>
+                            <td>${d.name}<br><small style="color:var(--text-dim)">${d.phone}</small></td>
+                            <td>${d.service}</td>
+                            <td>
+                                <select onchange="updateManifest('${s.id}', 'status', this.value)" class="status-pill st-${d.status}">
+                                    <option value="draft" ${d.status=='draft'?'selected':''}>Draft</option>
+                                    <option value="pending" ${d.status=='pending'?'selected':''}>Pending</option>
+                                    <option value="processing" ${d.status=='processing'?'selected':''}>Processing</option>
+                                    <option value="verified" ${d.status=='verified'?'selected':''}>Verified</option>
+                                    <option value="completed" ${d.status=='completed'?'selected':''}>Completed</option>
+                                </select>
+                            </td>
+                            <td><input type="text" value="${d.adminMsg}" onchange="updateManifest('${s.id}', 'adminMsg', this.value)" style="margin:0; padding:8px;"></td>
+                            <td><i class="fas fa-trash-can" onclick="wipeManifest('${s.id}')" style="color:var(--error); cursor:pointer;"></i></td>
+                        </tr>
+                    `;
+                });
+            });
+        }
+
+        window.updateManifest = async (id, field, val) => {
+            await updateDoc(doc(db, "orders", id), { [field]: val });
+        };
+        window.wipeManifest = async (id) => {
+            if(confirm("Permanently purge this manifest?")) await deleteDoc(doc(db, "orders", id));
+        };
+
+        // --- UI SYSTEM CONTROLS ---
+        window.toggleAuth = (show) => document.getElementById('staff-auth').style.display = show ? 'flex' : 'none';
+        window.logoutStaff = () => { sessionStorage.clear(); location.reload(); };
+        window.onscroll = () => document.getElementById('navbar').classList.toggle('sticky', window.scrollY > 50);
+
+        if(sessionStorage.getItem('staff_jwt')) initAdminHub();
+    </script>
+</body>
+</html>

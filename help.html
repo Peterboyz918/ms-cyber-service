@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center | MS Cyber Official</title>
+    <link rel="icon" type="image/png" href="31.png">
+
+<link rel="apple-touch-icon" href="31.png">
+
+<link rel="shortcut icon" href="31.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-database-compat.js"></script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #22c55e;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Outfit', sans-serif; background: var(--light); color: var(--dark); line-height: 1.6; }
+
+        header { background: var(--dark); color: white; padding: 40px 20px; text-align: center; position: relative; }
+        
+        .back-nav { position: absolute; top: 20px; left: 20px; list-style: none; }
+        .back-nav a { color: white; text-decoration: none; font-weight: bold; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 5px; font-size: 0.9rem; }
+
+        .container { max-width: 900px; margin: -40px auto 40px; background: white; border-radius: 15px; padding: 40px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+
+        h1 { font-size: 2.2rem; margin-bottom: 10px; }
+        .step-box { margin-bottom: 40px; padding-left: 60px; position: relative; }
+        
+        .step-num { 
+            position: absolute; left: 0; top: 0; width: 45px; height: 45px; 
+            background: var(--primary); color: white; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; font-weight: 800;
+        }
+
+        /* FEEDBACK SECTION */
+        .feedback-area { border-top: 2px solid var(--border); margin-top: 50px; padding-top: 30px; text-align: center; }
+        .vote-btns { display: flex; justify-content: center; gap: 20px; margin: 20px 0; }
+        .btn-vote { 
+            padding: 10px 25px; border-radius: 30px; border: 1px solid var(--border); 
+            background: white; cursor: pointer; transition: 0.3s; font-size: 1.1rem;
+        }
+        .btn-vote:hover { background: #f1f5f9; transform: translateY(-2px); }
+        .btn-vote.active { border-color: var(--success); color: var(--success); background: #f0fdf4; }
+
+        /* COMMENT SECTION */
+        .comment-form { background: #f1f5f9; padding: 25px; border-radius: 12px; margin-top: 30px; text-align: left; }
+        .comment-form input, .comment-form textarea {
+            width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid var(--border); font-family: inherit; font-size: 1rem;
+        }
+        .submit-btn { background: var(--dark); color: white; padding: 15px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; transition: 0.3s; }
+        .submit-btn:hover { background: var(--primary); }
+        
+        .public-comments { margin-top: 40px; text-align: left; }
+        .comment-card { background: white; padding: 20px; border: 1px solid var(--border); margin-bottom: 15px; border-radius: 10px; animation: slideIn 0.3s ease; }
+        .comment-card b { color: var(--primary); font-size: 1rem; display: block; }
+        .comment-card p { font-size: 1rem; margin-top: 8px; color: #334155; }
+        .comment-card span { font-size: 0.8rem; color: #94a3b8; }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .back-btn-container { text-align: center; margin-top: 20px; }
+        .back-btn-container a { color: var(--primary); text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <ul class="back-nav"><li><a href="index.html">← Back</a></li></ul>
+        <h1>How MS Cyber Works</h1>
+        <p>Follow these steps to complete your order successfully</p>
+    </header>
+
+    <div class="container">
+        <div class="step-box">
+            <div class="step-num">1</div>
+            <h3>Browse & Select Service</h3>
+            <p>Navigate to the <b>Services</b> tab. Choose your preferred package (Printing, Research, or Cyber Access) and click "Add to Order".</p>
+        </div>
+
+        <div class="step-box">
+            <div class="step-num">2</div>
+            <h3>Verify Order Details</h3>
+            <p>Go to <b>Order Summary</b>. Check the pricing and your M-Pesa phone number. Ensure everything is correct before moving to payment.</p>
+        </div>
+
+        <div class="step-box">
+            <div class="step-num">3</div>
+            <h3>Make Payment</h3>
+            <p>Click "Checkout". Wait for the M-Pesa STK push on your phone. Enter your PIN. Your status will update to <b>Paid</b> immediately.</p>
+        </div>
+
+        <div class="step-box">
+            <div class="step-num">4</div>
+            <h3>Download Results</h3>
+            <p>Once completed, go to <b>My Orders</b>. You can download your documents or view your session receipts directly.</p>
+        </div>
+
+        <div class="feedback-area">
+            <h4>Was this guide helpful?</h4>
+            <div class="vote-btns">
+                <button class="btn-vote" id="voteUp" onclick="vote('up')">👍 Yes, I understand</button>
+                <button class="btn-vote" id="voteDown" onclick="vote('down')">👎 Not quite</button>
+            </div>
+
+            <div class="comment-form">
+                <h4 style="margin-bottom:15px">Leave Public Feedback</h4>
+                <input type="text" id="userName" placeholder="Your Name (Visible to public)">
+                <textarea id="userMsg" rows="3" placeholder="Write your feedback here..."></textarea>
+                <button class="submit-btn" id="sendBtn" onclick="postFeedback()">SEND FEEDBACK TO PUBLIC</button>
+            </div>
+
+            <div class="public-comments" id="commentList">
+                <h4 style="margin-bottom:15px; border-bottom: 2px solid var(--border); padding-bottom: 10px;">Recent Customer Feedback</h4>
+                <div id="commentsGrid">
+                    <p style="color: #94a3b8;">Connecting to community feed...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="back-btn-container">
+            <a href="index.html">Return to MS Cyber Homepage</a>
+        </div>
+    </div>
+
+<script>
+    // --- 1. FIREBASE CONFIGURATION ---
+    // IMPORTANT: Replace these placeholders with your actual Firebase Console keys
+    const firebaseConfig = {
+        apiKey: "AIzaSyByYourKeyHere", 
+        authDomain: "ms-cyber-demo.firebaseapp.com",
+        databaseURL: "https://ms-cyber-demo-default-rtdb.firebaseio.com",
+        projectId: "ms-cyber-demo",
+        storageBucket: "ms-cyber-demo.appspot.com",
+        messagingSenderId: "123456789",
+        appId: "1:123456789:web:abcdef"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // --- 2. VOTE LOGIC ---
+    function vote(type) {
+        document.getElementById('voteUp').classList.remove('active');
+        document.getElementById('voteDown').classList.remove('active');
+        
+        if(type === 'up') document.getElementById('voteUp').classList.add('active');
+        else document.getElementById('voteDown').classList.add('active');
+
+        database.ref('stats/votes/' + type).transaction(current => (current || 0) + 1);
+        alert("Thanks! We've recorded your feedback.");
+    }
+
+    // --- 3. POST FEEDBACK (TO PUBLIC) ---
+    function postFeedback() {
+        const name = document.getElementById('userName').value.trim();
+        const msg = document.getElementById('userMsg').value.trim();
+        const btn = document.getElementById('sendBtn');
+
+        if(!name || !msg) {
+            alert("Please enter both your name and feedback.");
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerText = "PUBLISHING...";
+
+        const feedbackRef = database.ref('public_feedback');
+        const newPost = feedbackRef.push();
+        
+        newPost.set({
+            name: name,
+            message: msg,
+            timestamp: Date.now()
+        }).then(() => {
+            document.getElementById('userName').value = "";
+            document.getElementById('userMsg').value = "";
+            btn.disabled = false;
+            btn.innerText = "SEND FEEDBACK TO PUBLIC";
+            alert("Success! Your message is now live.");
+        }).catch(err => {
+            alert("Error: " + err.message);
+            btn.disabled = false;
+        });
+    }
+
+    // --- 4. REAL-TIME DATA FETCHING (PUBLIC FEED) ---
+    database.ref('public_feedback').orderByChild('timestamp').on('value', (snapshot) => {
+        const container = document.getElementById('commentsGrid');
+        const data = snapshot.val();
+        
+        if (!data) {
+            container.innerHTML = '<p style="color:#94a3b8">No feedback yet. Be the first to help others!</p>';
+            return;
+        }
+
+        // Convert to array and reverse (newest first)
+        const entries = Object.values(data).reverse();
+        let html = '';
+
+        entries.forEach(item => {
+            const timeAgo = new Date(item.timestamp).toLocaleString();
+            html += `
+                <div class="comment-card">
+                    <b>${item.name}</b>
+                    <p>${item.message}</p>
+                    <span>Sent on ${timeAgo}</span>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    });
+</script>
+
+</body>
+</html>
