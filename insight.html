@@ -12,222 +12,263 @@
 
     <style>
         :root {
-            --primary: #3b82f6; --p-glow: rgba(59, 130, 246, 0.25);
-            --accent: #00f2ff; --success: #10b981; --error: #ef4444; --warning: #f59e0b;
-            --bg: #020617; --surface: #0f172a; --border: rgba(255, 255, 255, 0.07);
-            --text: #f8fafc; --text-dim: #94a3b8; --panel: rgba(15, 23, 42, 0.98);
+            --primary: #3b82f6; 
+            --p-glow: rgba(59, 130, 246, 0.25);
+            --accent: #00f2ff; 
+            --success: #10b981; 
+            --error: #ef4444; 
+            --warning: #f59e0b;
+            --bg: #020617; 
+            --surface: #0f172a; 
+            --border: rgba(255, 255, 255, 0.07);
+            --text: #f8fafc; 
+            --text-dim: #94a3b8; 
+            --panel: rgba(15, 23, 42, 0.98);
         }
 
-        /* --- GLOBAL ARCHITECTURE --- */
+        /* --- CORE RESET & LAYOUT --- */
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
-        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
         
         body { 
-            background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif;
-            display: flex; height: 100vh; overflow: hidden; font-size: 14px;
+            background: var(--bg); 
+            color: var(--text); 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            display: flex; 
+            height: 100vh; 
+            overflow: hidden; 
+            font-size: 14px;
         }
 
-        /* --- AUTH OVERLAY --- */
-        #auth-overlay {
+        /* --- SECURITY OVERLAY --- */
+        #auth-gate {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: var(--bg); z-index: 9999; display: flex; 
-            align-items: center; justify-content: center; backdrop-filter: blur(20px);
+            background: radial-gradient(circle at center, #0f172a, #020617);
+            z-index: 10000; display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(25px);
         }
-        .auth-card {
-            background: var(--surface); border: 1px solid var(--border); 
-            padding: 40px; border-radius: 24px; width: 380px; text-align: center;
-            box-shadow: 0 0 50px rgba(59, 130, 246, 0.1);
+        .auth-box {
+            background: var(--surface); border: 1px solid var(--border);
+            padding: 50px; border-radius: 30px; width: 420px; text-align: center;
+            box-shadow: 0 0 100px rgba(59, 130, 246, 0.15);
         }
-        .auth-card h1 { font-family: 'Orbitron'; font-size: 1rem; margin-bottom: 30px; color: var(--primary); letter-spacing: 2px; }
+        .auth-box h1 { font-family: 'Orbitron'; color: var(--primary); letter-spacing: 5px; font-size: 1.2rem; margin-bottom: 40px; }
 
-        /* --- SIDEBAR: 16 TABS --- */
+        /* --- SIDEBAR ARCHITECTURE --- */
         aside {
-            width: 280px; background: var(--panel); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; padding: 20px; backdrop-filter: blur(60px);
-            z-index: 2000; overflow-y: auto; transition: 0.3s;
+            width: 300px; background: var(--panel); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; padding: 25px; backdrop-filter: blur(60px);
+            z-index: 2000; overflow-y: auto;
         }
-        .brand { text-align: center; padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 15px; }
-        .brand h1 { font-family: 'Orbitron'; font-size: 0.8rem; letter-spacing: 3px; color: #fff; text-shadow: 0 0 10px var(--primary); }
-
-        .nav-section { margin-bottom: 20px; }
-        .nav-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; padding: 10px 12px; font-weight: 800; display: block; }
+        .brand-zone { text-align: center; padding-bottom: 30px; border-bottom: 1px solid var(--border); margin-bottom: 25px; }
+        .brand-zone h1 { font-family: 'Orbitron'; font-size: 0.9rem; letter-spacing: 4px; color: #fff; text-shadow: 0 0 15px var(--primary); }
         
-        .nav-btn {
-            padding: 12px 16px; border-radius: 12px; display: flex; align-items: center; gap: 14px;
-            color: var(--text-dim); cursor: pointer; transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
-            margin-bottom: 4px; font-weight: 700; font-size: 0.78rem; border: 1px solid transparent;
+        .nav-group { margin-bottom: 30px; }
+        .nav-label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; padding: 10px 15px; font-weight: 800; display: block; opacity: 0.6; }
+        
+        .nav-item {
+            padding: 14px 18px; border-radius: 15px; display: flex; align-items: center; gap: 15px;
+            color: var(--text-dim); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            margin-bottom: 6px; font-weight: 700; font-size: 0.8rem; border: 1px solid transparent;
         }
-        .nav-btn i { width: 18px; font-size: 1rem; }
-        .nav-btn:hover { background: var(--p-glow); color: var(--primary); transform: translateX(5px); }
-        .nav-btn.active { background: var(--primary); color: white; border-color: rgba(255,255,255,0.1); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); }
+        .nav-item i { width: 20px; font-size: 1.1rem; text-align: center; }
+        .nav-item:hover { background: var(--p-glow); color: var(--primary); transform: translateX(8px); }
+        .nav-item.active { 
+            background: var(--primary); color: white; border-color: rgba(255,255,255,0.1); 
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4); 
+        }
 
-        /* --- VIEWPORT ENGINE --- */
-        main { flex: 1; overflow-y: auto; padding: 40px; position: relative; background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.03), transparent); }
-        .header-ui { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        /* --- MAIN VIEWPORT --- */
+        main { flex: 1; overflow-y: auto; padding: 45px; position: relative; scroll-behavior: smooth; }
+        .matrix-bg { position: fixed; top: 0; right: 0; width: 60%; height: 100%; background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.05), transparent); pointer-events: none; }
         
-        .tab-content { display: none; animation: quantumSlide 0.5s ease-out; }
-        .tab-content.active { display: block; }
-        @keyframes quantumSlide { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; border-bottom: 1px solid var(--border); padding-bottom: 25px; }
+        .status-badge { display: flex; align-items: center; gap: 8px; font-size: 0.7rem; font-weight: 800; color: var(--success); background: rgba(16, 185, 129, 0.1); padding: 6px 15px; border-radius: 20px; border: 1px solid var(--success); }
 
-        /* --- CARDS & TABLES --- */
-        .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
-        .card { background: var(--surface); border: 1px solid var(--border); padding: 25px; border-radius: 24px; position: relative; transition: 0.3s; }
-        .card:hover { border-color: var(--primary); }
-        .card h6 { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
-        .card h2 { font-size: 1.8rem; font-family: 'JetBrains Mono'; font-weight: 800; }
+        /* --- TAB LOGIC --- */
+        .viewport-section { display: none; animation: sectionIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .viewport-section.active { display: block; }
+        @keyframes sectionIn { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        .data-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 25px; margin-top: 25px; }
-        table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
-        th { text-align: left; padding: 12px; font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; border-bottom: 1px solid var(--border); }
-        td { padding: 18px 12px; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 0.85rem; }
-        td:first-child { border-left: 1px solid var(--border); border-radius: 12px 0 0 12px; color: var(--primary); font-family: 'JetBrains Mono'; font-weight: 800; }
-        td:last-child { border-right: 1px solid var(--border); border-radius: 0 12px 12px 0; }
+        /* --- COMPONENT STYLES --- */
+        .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-bottom: 35px; }
+        .stat-card { background: var(--surface); border: 1px solid var(--border); padding: 30px; border-radius: 28px; transition: 0.4s; position: relative; overflow: hidden; }
+        .stat-card:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .stat-card h6 { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+        .stat-card h2 { font-size: 2rem; font-family: 'JetBrains Mono'; font-weight: 800; }
+        .trend-up { color: var(--success); font-size: 0.7rem; font-weight: 800; margin-top: 10px; }
 
-        /* --- INPUTS & BUTTONS --- */
-        .ms-input { width: 100%; padding: 15px; background: #0b1121; border: 1px solid var(--border); color: #fff; border-radius: 14px; font-size: 0.85rem; margin-bottom: 20px; }
-        .ms-btn { width: 100%; padding: 18px; background: var(--primary); border: none; color: #fff; border-radius: 14px; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .ms-btn:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 10px 20px var(--p-glow); }
+        .data-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 28px; padding: 30px; margin-top: 30px; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        
+        table { width: 100%; border-collapse: separate; border-spacing: 0 12px; }
+        th { text-align: left; padding: 15px; font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        td { padding: 20px 15px; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        td:first-child { border-left: 1px solid var(--border); border-radius: 15px 0 0 15px; color: var(--primary); font-family: 'JetBrains Mono'; font-weight: 800; }
+        td:last-child { border-right: 1px solid var(--border); border-radius: 0 15px 15px 0; }
 
-        /* --- THERMAL RECEIPT --- */
-        .receipt-container { width: 320px; margin: 0 auto; background: #fff; color: #000; padding: 25px; font-family: 'JetBrains Mono', monospace; font-size: 11px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
-        .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 15px; margin-bottom: 15px; }
-        .receipt-header h2 { font-size: 16px; font-weight: 900; }
-        .receipt-line { display: flex; justify-content: space-between; margin-bottom: 5px; }
-        .receipt-total { border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 10px 0; margin: 15px 0; font-size: 14px; font-weight: 900; }
-        .barcode { height: 40px; background: repeating-linear-gradient(90deg, #000, #000 2px, #fff 2px, #fff 4px); margin: 20px 0; }
+        /* --- INTERACTIVE ELEMENTS --- */
+        .matrix-input { width: 100%; padding: 18px; background: #0b1121; border: 1px solid var(--border); color: #fff; border-radius: 18px; font-size: 0.9rem; margin-bottom: 20px; transition: 0.3s; }
+        .matrix-input:focus { border-color: var(--primary); box-shadow: 0 0 20px var(--p-glow); }
+        .matrix-btn { width: 100%; padding: 20px; background: var(--primary); border: none; color: #fff; border-radius: 18px; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 12px; text-transform: uppercase; letter-spacing: 2px; }
+        .matrix-btn:hover { background: #2563eb; transform: translateY(-3px); box-shadow: 0 15px 30px var(--p-glow); }
 
-        .chart-container { background: var(--surface); border: 1px solid var(--border); padding: 25px; border-radius: 24px; height: 350px; }
-        .badge { background: rgba(59, 130, 246, 0.1); color: var(--primary); padding: 4px 10px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; border: 1px solid var(--primary); }
+        /* --- THERMAL VIEWPORT --- */
+        .thermal-frame { background: #1a1a1a; padding: 40px; border-radius: 28px; min-height: 500px; display: flex; align-items: center; justify-content: center; }
+        .receipt { width: 300px; background: #fff; color: #000; padding: 30px; font-family: 'JetBrains Mono', monospace; font-size: 11px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5)); }
+        .receipt h4 { text-align: center; font-weight: 900; font-size: 15px; margin-bottom: 5px; }
+        .receipt-hr { border-top: 1px dashed #000; margin: 15px 0; }
+        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+        .barcode-sim { height: 45px; background: repeating-linear-gradient(90deg, #000, #000 2px, #fff 2px, #fff 5px); margin-top: 25px; }
+
+        /* --- CHART WRAPPERS --- */
+        .chart-box { background: var(--surface); border: 1px solid var(--border); border-radius: 28px; padding: 25px; height: 380px; }
 
         @media print {
             body * { visibility: hidden; }
-            #printable, #printable * { visibility: visible; }
-            #printable { position: absolute; left: 0; top: 0; width: 80mm; border: none; }
-            .no-print { display: none !important; }
+            #printable-area, #printable-area * { visibility: visible; }
+            #printable-area { position: absolute; left: 0; top: 0; width: 80mm; }
         }
     </style>
 </head>
 <body>
 
-    <div id="auth-overlay">
-        <div class="auth-card">
-            <h1>MS-CYBER UPLINK</h1>
-            <input type="email" id="auth-email" class="ms-input" placeholder="Neural ID (Email)">
-            <input type="password" id="auth-password" class="ms-input" placeholder="Access Key">
-            <button class="ms-btn" id="btn-login"><i class="fas fa-key"></i> INITIATE LOGIN</button>
-            <p id="auth-error" style="color:var(--error); font-size:0.7rem; margin-top:15px; display:none; font-weight: 800;"></p>
+    <div id="auth-gate">
+        <div class="auth-box">
+            <i class="fas fa-shield-halved" style="font-size: 3rem; color: var(--primary); margin-bottom: 20px;"></i>
+            <h1>SYSTEM ACCESS</h1>
+            <input type="email" id="matrix-uid" class="matrix-input" placeholder="Neural Identification">
+            <input type="password" id="matrix-key" class="matrix-input" placeholder="Encryption Key">
+            <button class="matrix-btn" id="btn-uplink"><i class="fas fa-bolt"></i> INITIATE UPLINK</button>
+            <p id="gate-err" style="color:var(--error); font-size:0.75rem; margin-top:20px; display:none; font-weight: 800;"></p>
         </div>
     </div>
 
     <aside class="no-print">
-        <div class="brand"><h1>MS CYBER 0.0</h1></div>
+        <div class="brand-zone"><h1>MS CYBER 0.0</h1></div>
         
-        <div class="nav-section">
+        <div class="nav-group">
             <span class="nav-label">Core Intelligence</span>
-            <div class="nav-btn active" onclick="go('dash', this)"><i class="fas fa-chart-pie"></i> Executive Insight</div>
-            <div class="nav-btn" onclick="go('registry', this)"><i class="fas fa-database"></i> Master Registry</div>
-            <div class="nav-btn" onclick="go('thermal', this)"><i class="fas fa-receipt"></i> Thermal Engine</div>
-            <div class="nav-btn" onclick="go('audit', this)"><i class="fas fa-shield-halved"></i> Audit Forensic</div>
+            <div class="nav-item active" onclick="nav('dash', this)"><i class="fas fa-chart-line"></i> Executive Insight</div>
+            <div class="nav-item" onclick="nav('registry', this)"><i class="fas fa-server"></i> Master Registry</div>
+            <div class="nav-item" onclick="nav('thermal', this)"><i class="fas fa-print"></i> Thermal Engine</div>
+            <div class="nav-item" onclick="nav('forensics', this)"><i class="fas fa-user-shield"></i> Audit Forensic</div>
         </div>
 
-        <div class="nav-section">
+        <div class="nav-group">
             <span class="nav-label">Data Science Hub</span>
-            <div class="nav-btn" onclick="go('predict', this)"><i class="fas fa-brain"></i> Yield Projection</div>
-            <div class="nav-btn" onclick="go('traffic', this)"><i class="fas fa-users-viewfinder"></i> Flow Analysis</div>
-            <div class="nav-btn" onclick="go('nodes', this)"><i class="fas fa-circle-nodes"></i> Node Stability</div>
-            <div class="nav-btn" onclick="go('churn', this)"><i class="fas fa-user-xmark"></i> Retention Matrix</div>
+            <div class="nav-item" onclick="nav('yield', this)"><i class="fas fa-microchip"></i> Yield Projection</div>
+            <div class="nav-item" onclick="nav('flow', this)"><i class="fas fa-wave-square"></i> Flow Analysis</div>
+            <div class="nav-item" onclick="nav('nodes', this)"><i class="fas fa-network-wired"></i> Node Stability</div>
+            <div class="nav-item" onclick="nav('retention', this)"><i class="fas fa-users-viewfinder"></i> Retention Matrix</div>
         </div>
 
-        <div class="nav-section">
-            <span class="nav-label">Finance & Ops</span>
-            <div class="nav-btn" onclick="go('fiscal', this)"><i class="fas fa-landmark"></i> KRA / Tax Portal</div>
-            <div class="nav-btn" onclick="go('payroll', this)"><i class="fas fa-wallet"></i> Staff Logic</div>
-            <div class="nav-btn" onclick="go('assets', this)"><i class="fas fa-boxes-packing"></i> Resource Assets</div>
-            <div class="nav-btn" onclick="go('costs', this)"><i class="fas fa-money-bill-trend-up"></i> Opex Ledger</div>
+        <div class="nav-group">
+            <span class="nav-label">Finance & Assets</span>
+            <div class="nav-item" onclick="nav('fiscal', this)"><i class="fas fa-file-invoice-dollar"></i> KRA / Tax Portal</div>
+            <div class="nav-item" onclick="nav('staff', this)"><i class="fas fa-id-card-clip"></i> Staff Logic</div>
+            <div class="nav-item" onclick="nav('inventory', this)"><i class="fas fa-cubes"></i> Resource Assets</div>
+            <div class="nav-item" onclick="nav('opex', this)"><i class="fas fa-vault"></i> Opex Ledger</div>
         </div>
 
-        <div class="nav-section">
+        <div class="nav-group">
             <span class="nav-label">Management</span>
-            <div class="nav-btn" onclick="go('crm', this)"><i class="fas fa-users-rectangle"></i> Client CRM</div>
-            <div class="nav-btn" onclick="go('marketing', this)"><i class="fas fa-bullhorn"></i> Outreach Hub</div>
-            <div class="nav-btn" onclick="go('terminal', this)"><i class="fas fa-terminal"></i> Neural Console</div>
-            <div class="nav-btn" onclick="go('config', this)"><i class="fas fa-gears"></i> Matrix Config</div>
-            <div class="nav-btn" style="color:var(--error); margin-top:20px;" id="btn-logout"><i class="fas fa-power-off"></i> Terminate Link</div>
+            <div class="nav-item" onclick="nav('crm', this)"><i class="fas fa-address-book"></i> Client CRM</div>
+            <div class="nav-item" onclick="nav('marketing', this)"><i class="fas fa-satellite-dish"></i> Outreach Hub</div>
+            <div class="nav-item" onclick="nav('terminal', this)"><i class="fas fa-rectangle-terminal"></i> Neural Console</div>
+            <div class="nav-item" onclick="nav('config', this)"><i class="fas fa-sliders"></i> Matrix Config</div>
+            <div class="nav-item" style="color:var(--error); border-top: 1px solid var(--border); margin-top: 20px;" id="btn-terminate"><i class="fas fa-power-off"></i> Terminate Link</div>
         </div>
     </aside>
 
     <main>
-        <div class="header-ui no-print">
+        <div class="matrix-bg"></div>
+        <div class="top-bar no-print">
             <div>
-                <h2 id="v-title" style="font-family:'Orbitron'; font-size:1.2rem;">EXECUTIVE INSIGHT</h2>
-                <p id="v-desc" style="color:var(--text-dim); font-size:0.75rem;">Real-time synthesis of enterprise data nodes.</p>
+                <h2 id="view-title" style="font-family:'Orbitron'; font-size:1.3rem; letter-spacing: 2px;">EXECUTIVE INSIGHT</h2>
+                <p id="view-desc" style="color:var(--text-dim); font-size:0.8rem;">Synthesizing real-time enterprise telemetry.</p>
             </div>
-            <div style="display:flex; gap:15px; align-items:center;">
-                <div class="badge"><i class="fas fa-circle-dot"></i> UPLINK: STABLE</div>
-                <input type="text" placeholder="Search Global Manifests..." style="background:var(--surface); border:1px solid var(--border); color:#fff; padding:10px 20px; border-radius:12px; font-size:0.8rem; width:200px;">
+            <div style="display:flex; gap:20px; align-items:center;">
+                <div class="status-badge"><i class="fas fa-circle"></i> UPLINK: SECURE</div>
+                <div style="position:relative;">
+                    <i class="fas fa-bell" style="color:var(--text-dim); cursor:pointer;"></i>
+                    <span style="position:absolute; top:-5px; right:-5px; background:var(--error); width:8px; height:8px; border-radius:50%;"></span>
+                </div>
             </div>
         </div>
 
-        <div id="dash" class="tab-content active">
-            <div class="metric-grid">
-                <div class="card"><h6>Gross Revenue</h6><h2 id="k-rev">KES 0</h2><p style="color:var(--success); font-size:0.65rem; margin-top:10px;">+12.4% TODAY</p></div>
-                <div class="card"><h6>Manifest Vol</h6><h2 id="k-count">0</h2><p style="color:var(--primary); font-size:0.65rem; margin-top:10px;">SYNCED</p></div>
-                <div class="card"><h6>VAT Reserve</h6><h2 id="k-vat">KES 0</h2><p style="color:var(--warning); font-size:0.65rem; margin-top:10px;">KRA (16%)</p></div>
-                <div class="card"><h6>Efficiency</h6><h2 id="k-eff">94.8%</h2><p style="color:var(--accent); font-size:0.65rem; margin-top:10px;">OPTIMIZED</p></div>
+        <section id="dash" class="viewport-section active">
+            <div class="stat-grid">
+                <div class="stat-card"><h6>Gross Revenue</h6><h2 id="val-rev">KES 0</h2><div class="trend-up"><i class="fas fa-arrow-trend-up"></i> 14.2% VS PREV</div></div>
+                <div class="stat-card"><h6>Manifest Vol</h6><h2 id="val-qty">0</h2><div class="trend-up" style="color:var(--primary)">DATA SYNCED</div></div>
+                <div class="stat-card"><h6>VAT Liability</h6><h2 id="val-vat">KES 0</h2><div class="trend-up" style="color:var(--warning)">KRA PENDING</div></div>
+                <div class="stat-card"><h6>Node Health</h6><h2 id="val-eff">98.2%</h2><div class="trend-up">OPTIMIZED</div></div>
             </div>
             <div style="display:grid; grid-template-columns: 2fr 1fr; gap:30px;">
-                <div class="chart-container"><h5>Revenue Velocity</h5><canvas id="revChart"></canvas></div>
-                <div class="chart-container"><h5>Service Concentration</h5><canvas id="svcChart"></canvas></div>
+                <div class="chart-box"><h5>Financial Velocity</h5><canvas id="chart-rev"></canvas></div>
+                <div class="chart-box"><h5>Service Concentration</h5><canvas id="chart-svc"></canvas></div>
             </div>
-        </div>
+        </section>
 
-        <div id="registry" class="tab-content">
-            <div class="data-wrap">
+        <section id="registry" class="viewport-section">
+            <div class="data-panel">
+                <div class="panel-header"><h3>Live Manifest Registry</h3><button class="matrix-btn" style="width:auto; padding:10px 25px; font-size:0.7rem;"><i class="fas fa-file-export"></i> EXPORT CSV</button></div>
                 <table>
                     <thead><tr><th>Ref ID</th><th>Operator</th><th>Service Node</th><th>Yield</th><th>Timestamp</th><th>Status</th></tr></thead>
-                    <tbody id="reg-body"></tbody>
+                    <tbody id="registry-rows"></tbody>
                 </table>
             </div>
-        </div>
+        </section>
 
-        <div id="thermal" class="tab-content">
-            <div style="display:grid; grid-template-columns: 350px 1fr; gap:40px;">
-                <div class="data-wrap no-print">
-                    <h5>Thermal Compiler</h5>
-                    <input type="text" id="t-input" class="ms-input" placeholder="Reference #">
-                    <button class="ms-btn" onclick="buildThermal()"><i class="fas fa-print"></i> EXECUTE PRINT</button>
+        <section id="thermal" class="viewport-section">
+            <div style="display:grid; grid-template-columns: 380px 1fr; gap:40px;">
+                <div class="data-panel no-print">
+                    <h3>Thermal Compiler</h3>
+                    <p style="color:var(--text-dim); margin-bottom:25px; font-size:0.8rem;">Input Reference ID to generate physical manifest.</p>
+                    <input type="text" id="thermal-ref" class="matrix-input" placeholder="e.g. 540922">
+                    <button class="matrix-btn" onclick="generateThermal()"><i class="fas fa-print"></i> COMPILE & PRINT</button>
                 </div>
-                <div id="thermal-viewport"></div>
+                <div class="thermal-frame" id="thermal-preview">
+                    <div style="color:var(--text-dim); text-align:center;"><i class="fas fa-receipt" style="font-size:3rem; opacity:0.2;"></i><p>Awaiting Compilation</p></div>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <div id="audit" class="tab-content">
-            <div class="data-wrap"><h5>Forensic Log</h5><div id="audit-stream" style="font-family:'JetBrains Mono'; color:var(--text-dim); line-height:2;"></div></div>
-        </div>
+        <section id="forensics" class="viewport-section">
+            <div class="data-panel"><h3>Forensic Event Log</h3><div id="forensic-log" style="font-family:'JetBrains Mono'; color:var(--text-dim); line-height:2.2; max-height:500px; overflow-y:auto;"></div></div>
+        </section>
 
-        <div id="predict" class="tab-content"><div class="chart-container"><canvas id="forecastChart"></canvas></div></div>
+        <section id="terminal" class="viewport-section">
+            <div class="data-panel" style="background:#000; height:550px; border-color:var(--primary);">
+                <div id="console-output" style="color:var(--success); font-family:'JetBrains Mono'; font-size:0.85rem; height:100%; overflow-y:auto; line-height:1.6;">
+                    [SYSTEM] MS-CYBER QUANTUM INITIALIZED...<br>
+                    [SYSTEM] ESTABLISHING FIREBASE UPLINK... OK<br>
+                    [SYSTEM] SECURITY HANDSHAKE... SUCCESSFUL<br>
+                </div>
+            </div>
+        </section>
 
-        <div id="traffic" class="tab-content"><div class="chart-container"><canvas id="trafficChart"></canvas></div></div>
-
-        <div id="nodes" class="tab-content"><div class="data-wrap"><h3>Node Stability Monitor</h3><p>Uplink active via Kamwangi-Alpha.</p></div></div>
-        <div id="churn" class="tab-content"><div class="data-wrap"><h3>Retention Matrix</h3><p>Current Rate: 88.4%</p></div></div>
-        <div id="fiscal" class="tab-content"><div class="card"><h3>KRA / Tax Portal</h3><p id="f-vat">VAT Due: KES 0</p></div></div>
-        <div id="payroll" class="tab-content"><div class="data-wrap"><h3>Staff Logic</h3><table><thead><tr><th>Staff</th><th>Yield</th><th>Comm</th></tr></thead><tbody id="pay-body"></tbody></table></div></div>
-        <div id="assets" class="tab-content"><div class="data-wrap"><h3>Resource Assets</h3><p>Thermal Paper: 82%</p></div></div>
-        <div id="costs" class="tab-content"><div class="data-wrap"><h3>Opex Ledger</h3><p>Total: KES 4,200</p></div></div>
-        <div id="crm" class="tab-content"><div class="data-wrap"><h3>Client CRM</h3><p>Encrypted records only.</p></div></div>
-        <div id="marketing" class="tab-content"><div class="data-wrap"><h3>Outreach Hub</h3><button class="ms-btn" style="width:200px;">SEND SMS</button></div></div>
-        <div id="terminal" class="tab-content"><div class="data-wrap" style="background:#000; height:450px; color:var(--success); font-family:'JetBrains Mono';" id="console-stream"></div></div>
-        <div id="config" class="tab-content"><div class="data-wrap"><h3>Matrix Config</h3><p>Global Protocol Settings Active.</p></div></div>
+        <section id="yield" class="viewport-section"><div class="chart-box"><canvas id="yield-chart"></canvas></div></section>
+        <section id="flow" class="viewport-section"><div class="chart-box"><canvas id="flow-chart"></canvas></div></section>
+        <section id="fiscal" class="viewport-section"><div class="stat-card"><h3>Tax Liability Matrix</h3><p id="fiscal-vat">Calculated VAT: KES 0</p></div></section>
+        <section id="staff" class="viewport-section">
+            <div class="data-panel">
+                <table><thead><tr><th>Staff ID</th><th>Total Yield</th><th>Commission (10%)</th></tr></thead><tbody id="staff-rows"></tbody></table>
+            </div>
+        </section>
+        <section id="opex" class="viewport-section"><div class="data-panel"><h3>Operating Expenses</h3><p>Electricity / Rent / Internet</p></div></section>
+        <section id="config" class="viewport-section"><div class="data-panel"><h3>System Protocols</h3><p>Global Encryption: AES-256</p></div></section>
 
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+        // CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyAqPGDu8ZzHski-wi9PtoCw39jfNgsR5fM",
             authDomain: "ms-cyber.firebaseapp.com",
@@ -241,91 +282,173 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // --- AUTH GATEKEEPER ---
-        const authOverlay = document.getElementById('auth-overlay');
-        document.getElementById('btn-login').addEventListener('click', () => {
-            const email = document.getElementById('auth-email').value;
-            const pass = document.getElementById('auth-password').value;
+        // --- AUTH CONTROL SYSTEM ---
+        const gate = document.getElementById('auth-gate');
+        const loginBtn = document.getElementById('btn-uplink');
+        const logoutBtn = document.getElementById('btn-terminate');
+
+        loginBtn.addEventListener('click', () => {
+            const email = document.getElementById('matrix-uid').value;
+            const pass = document.getElementById('matrix-key').value;
             signInWithEmailAndPassword(auth, email, pass).catch(err => {
-                document.getElementById('auth-error').style.display = 'block';
-                document.getElementById('auth-error').innerText = "ACCESS DENIED";
+                const errBox = document.getElementById('gate-err');
+                errBox.style.display = 'block';
+                errBox.innerText = "ACCESS DENIED: NEURAL KEY MISMATCH";
             });
         });
-        document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+
+        logoutBtn.addEventListener('click', () => signOut(auth));
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                authOverlay.style.display = 'none';
-                initDashboard();
+                gate.style.display = 'none';
+                initMatrixSync();
+                logEvent("SECURE UPLINK ESTABLISHED BY " + user.email);
             } else {
-                authOverlay.style.display = 'flex';
+                gate.style.display = 'flex';
             }
         });
 
-        // --- CORE FUNCTIONALITY ---
-        let mainArchive = [];
-        function initDashboard() {
+        // --- GLOBAL DATA STORE ---
+        let matrixData = [];
+        function initMatrixSync() {
             const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
             onSnapshot(q, (snap) => {
-                const rBody = document.getElementById('reg-body');
-                const pBody = document.getElementById('pay-body');
-                let rHtml = ''; let pHtml = ''; let total = 0; let staff = {};
-                mainArchive = [];
+                matrixData = [];
+                let totalYield = 0;
+                let registryHtml = '';
+                let staffPerf = {};
+
                 snap.forEach(doc => {
-                    const d = doc.data(); mainArchive.push(d);
-                    let price = d.service?.toLowerCase().includes('helb') ? 500 : 200;
-                    total += price;
-                    const op = d.fName || "PeterN.K";
-                    if(!staff[op]) staff[op] = { sum: 0 }; staff[op].sum += price;
-                    rHtml += `<tr><td>#${d.manifestId}</td><td>${op}</td><td style="text-transform:uppercase;">${d.service}</td><td style="color:var(--success)">KES ${price}</td><td>${d.timestamp?.toDate().toLocaleTimeString()}</td><td><span class="badge">DONE</span></td></tr>`;
+                    const d = doc.data();
+                    matrixData.push(d);
+                    
+                    // Logic for Pricing
+                    const price = d.service?.toLowerCase().includes('helb') ? 500 : 200;
+                    totalYield += price;
+
+                    // Staff Commission Tracking
+                    const staffId = d.fName || "PETER_NK";
+                    if(!staffPerf[staffId]) staffPerf[staffId] = 0;
+                    staffPerf[staffId] += price;
+
+                    registryHtml += `
+                        <tr>
+                            <td>#${d.manifestId}</td>
+                            <td>${staffId}</td>
+                            <td style="text-transform:uppercase;">${d.service}</td>
+                            <td style="color:var(--success)">KES ${price}</td>
+                            <td>${d.timestamp?.toDate().toLocaleTimeString()}</td>
+                            <td><span class="status-badge" style="background:rgba(59,130,246,0.1); border-color:var(--primary); color:var(--primary);">COMMITTED</span></td>
+                        </tr>`;
                 });
-                rBody.innerHTML = rHtml;
-                document.getElementById('k-rev').innerText = `KES ${total.toLocaleString()}`;
-                document.getElementById('k-count').innerText = snap.size;
-                document.getElementById('k-vat').innerText = `KES ${(total * 0.16).toFixed(0)}`;
-                Object.entries(staff).forEach(([name, data]) => {
-                    pHtml += `<tr><td>${name}</td><td>KES ${data.sum}</td><td>KES ${(data.sum*0.1).toFixed(0)}</td></tr>`;
+
+                // Update UI Metrics
+                document.getElementById('registry-rows').innerHTML = registryHtml;
+                document.getElementById('val-rev').innerText = `KES ${totalYield.toLocaleString()}`;
+                document.getElementById('val-qty').innerText = snap.size;
+                document.getElementById('val-vat').innerText = `KES ${(totalYield * 0.16).toFixed(0)}`;
+                document.getElementById('fiscal-vat').innerText = `Calculated VAT Liability: KES ${(totalYield * 0.16).toFixed(0)}`;
+
+                // Update Staff Table
+                let staffHtml = '';
+                Object.entries(staffPerf).forEach(([id, val]) => {
+                    staffHtml += `<tr><td>${id}</td><td>KES ${val}</td><td>KES ${(val * 0.1).toFixed(0)}</td></tr>`;
                 });
-                pBody.innerHTML = pHtml;
+                document.getElementById('staff-rows').innerHTML = staffHtml;
             });
         }
 
-        // --- CHARTS & NAV ---
-        window.go = (id, el) => {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
+        // --- NAVIGATION ENGINE ---
+        window.nav = (id, el) => {
+            document.querySelectorAll('.viewport-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
             document.getElementById(id).classList.add('active');
             el.classList.add('active');
+            
+            document.getElementById('view-title').innerText = el.innerText.toUpperCase();
+            logEvent("NAVIGATED TO MODULE: " + id.toUpperCase());
         };
 
-        const buildChart = (id, type, data, color) => {
-            const ctx = document.getElementById(id).getContext('2d');
-            return new Chart(ctx, { type: type, data: { labels: ['A','B','C','D','E','F'], datasets: [{ data: data, borderColor: color, fill: true, tension: 0.4 }] }, options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } } });
-        };
-        buildChart('revChart', 'line', [1200, 3100, 4500, 2900, 5200, 4100], '#3b82f6');
-        buildChart('svcChart', 'doughnut', [45, 30, 15, 10], '#00f2ff');
+        // --- THERMAL COMPILER ---
+        window.generateThermal = () => {
+            const ref = document.getElementById('thermal-ref').value;
+            const data = matrixData.find(x => x.manifestId == ref);
+            
+            if(!data) {
+                alert("MANIFEST NOT FOUND IN LOCAL CACHE");
+                return;
+            }
 
-        // --- THERMAL ENGINE ---
-        window.buildThermal = () => {
-            const mid = document.getElementById('t-input').value;
-            const d = mainArchive.find(x => x.manifestId == mid);
-            if(!d) return alert("Error: Reference ID not found.");
-            document.getElementById('thermal-viewport').innerHTML = `
-                <div class="receipt-container" id="printable">
-                    <div class="receipt-header"><h2>MS CYBER GLOBAL</h2><p>KAMWANGI TOWN</p></div>
-                    <div class="receipt-line"><span>DATE: ${new Date().toLocaleDateString()}</span></div>
-                    <div class="receipt-line"><span>SERVICE:</span><span>${d.service}</span></div>
-                    <div class="receipt-total">TOTAL: KES 200.00</div>
-                    <div class="barcode"></div>
-                </div>`;
+            const preview = document.getElementById('thermal-preview');
+            preview.innerHTML = `
+                <div class="receipt" id="printable-area">
+                    <h4>MS-CYBER SERVICES</h4>
+                    <p style="text-align:center;">Kamwangi, Kiambu County</p>
+                    <div class="receipt-hr"></div>
+                    <div class="receipt-row"><span>REF ID:</span><span>#${data.manifestId}</span></div>
+                    <div class="receipt-row"><span>OPERATOR:</span><span>${data.fName || 'ADMIN'}</span></div>
+                    <div class="receipt-row"><span>SERVICE:</span><span>${data.service}</span></div>
+                    <div class="receipt-hr"></div>
+                    <div class="receipt-row" style="font-weight:900; font-size:13px;"><span>TOTAL:</span><span>KES 200.00</span></div>
+                    <div class="receipt-hr"></div>
+                    <p style="text-align:center; font-size:9px;">THANK YOU FOR VISITING MS-CYBER</p>
+                    <div class="barcode-sim"></div>
+                </div>
+            `;
+            logEvent("COMPILED THERMAL MANIFEST FOR #" + ref);
         };
 
-        // --- CONSOLE ---
-        const cStream = document.getElementById('console-stream');
-        setInterval(() => {
-            cStream.innerHTML += `[${new Date().toLocaleTimeString()}] UPLINK SYNC: Firebase Cloud Active...<br>`;
-            cStream.scrollTop = cStream.scrollHeight;
-        }, 5000);
+        // --- FORENSIC LOGGING ---
+        function logEvent(msg) {
+            const log = document.getElementById('forensic-log');
+            const con = document.getElementById('console-output');
+            const stamp = new Date().toLocaleTimeString();
+            const entry = `[${stamp}] ${msg}<br>`;
+            
+            if(log) log.innerHTML = entry + log.innerHTML;
+            if(con) {
+                con.innerHTML += entry;
+                con.scrollTop = con.scrollHeight;
+            }
+        }
+
+        // --- CHART INITIALIZATION ---
+        function initCharts() {
+            const ctx1 = document.getElementById('chart-rev').getContext('2d');
+            new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['08:00', '10:00', '12:00', '14:00', '16:00', '18:00'],
+                    datasets: [{
+                        label: 'Revenue Flow',
+                        data: [800, 2400, 5200, 3900, 6800, 4100],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false } } } }
+            });
+
+            const ctx2 = document.getElementById('chart-svc').getContext('2d');
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Browsing', 'Printing', 'Applications', 'Gov Services'],
+                    datasets: [{
+                        data: [40, 25, 20, 15],
+                        backgroundColor: ['#3b82f6', '#00f2ff', '#10b981', '#f59e0b'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 } } } } }
+            });
+        }
+
+        initCharts();
     </script>
 </body>
 </html>
