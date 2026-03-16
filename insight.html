@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MS-CYBER OS v10.0 | Kamwangi Enterprise Hub</title>
+    <title>MS-CYBER OS v11.0 | Kamwangi Enterprise Hub</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -134,7 +134,7 @@
         .btn-primary:hover { background: var(--primary-light); transform: translateY(-2px); }
 
         /* ================================================================
-           5. THERMAL PRINTER UI
+           5. THERMAL PRINTER UI & REAL HARDWARE PRINT
            ================================================================
         */
         .thermal-preview-container {
@@ -143,19 +143,36 @@
         .receipt-paper {
             background: #fff; color: #000; width: 350px; padding: 40px;
             font-family: var(--font-code); font-size: 11px; line-height: 1.6;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); margin: 0 auto;
         }
         .receipt-center { text-align: center; margin-bottom: 20px; }
         .receipt-line { border-top: 1px dashed #000; margin: 15px 0; }
         .receipt-row { display: flex; justify-content: space-between; margin: 3px 0; }
 
-        /* CHARTS */
         .chart-container { background: var(--card-bg); padding: 30px; border-radius: 24px; height: 400px; border: 1px solid var(--border); }
 
+        /* ================================================================
+           6. PRINT-ONLY PROTOCOL (CSS FOR HARDWARE)
+           ================================================================
+        */
         @media print {
+            body * { visibility: hidden; }
+            #receipt-output, #receipt-output * { visibility: visible; }
+            #receipt-output {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 80mm; /* Standard Thermal Roll Width */
+                margin: 0;
+                padding: 0;
+            }
+            .receipt-paper {
+                box-shadow: none;
+                width: 80mm;
+                padding: 10px;
+                border: none;
+            }
             .no-print { display: none !important; }
-            body { background: white; color: black; }
-            .receipt-paper { box-shadow: none; padding: 0; width: 100%; }
         }
     </style>
 </head>
@@ -258,8 +275,7 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody id="sales-tbody">
-                            </tbody>
+                        <tbody id="sales-tbody"></tbody>
                     </table>
                 </div>
             </section>
@@ -267,28 +283,33 @@
             <section id="tab-printer" class="view-section">
                 <div class="thermal-preview-container">
                     <div class="data-panel" style="background:var(--card-bg); padding:40px; border-radius:24px; border:1px solid var(--border);">
-                        <h3>Thermal Station v10.0</h3>
-                        <p style="color:var(--text-dim); margin-bottom:30px;">Enter a transaction Ref ID to generate a professional receipt.</p>
+                        <h3>Thermal Station v11.0</h3>
+                        <p style="color:var(--text-dim); margin-bottom:30px;">Enter a transaction Ref ID to generate and physically print a receipt.</p>
                         
                         <label style="display:block; margin-bottom:10px; font-weight:700;">Transaction Reference</label>
                         <input type="text" id="receipt-ref" class="cyber-input" placeholder="e.g. 5501">
                         
-                        <button class="btn-primary" onclick="generateReceipt()" style="width:100%; justify-content:center;">
-                            <i class="fas fa-print"></i> COMPILE RECEIPT
-                        </button>
+                        <div style="display:flex; gap:15px;">
+                            <button class="btn-primary" onclick="generateReceipt()" style="flex:1; justify-content:center;">
+                                <i class="fas fa-sync"></i> COMPILE DATA
+                            </button>
+                            <button class="btn-primary" onclick="window.print()" style="flex:1; background:var(--success); justify-content:center;">
+                                <i class="fas fa-print"></i> SEND TO PRINTER
+                            </button>
+                        </div>
 
                         <div style="margin-top:40px; padding:25px; background:rgba(255,255,255,0.02); border-radius:15px; border:1px solid var(--border);">
-                            <h4 style="color:var(--primary); margin-bottom:15px;">Hardware Status</h4>
-                            <div class="receipt-row" style="color:var(--text-dim)"><span>Epson Driver</span><span style="color:var(--success)">Ready</span></div>
-                            <div class="receipt-row" style="color:var(--text-dim)"><span>Paper Width</span><span>80mm</span></div>
-                            <div class="receipt-row" style="color:var(--text-dim)"><span>Node Location</span><span>Kamwangi HQ</span></div>
+                            <h4 style="color:var(--primary); margin-bottom:15px;">Hardware Interface</h4>
+                            <div class="receipt-row" style="color:var(--text-dim)"><span>Printer Status</span><span style="color:var(--success)">CONNECTED</span></div>
+                            <div class="receipt-row" style="color:var(--text-dim)"><span>Format</span><span>80mm POS</span></div>
+                            <div class="receipt-row" style="color:var(--text-dim)"><span>Baud Rate</span><span>9600 bps</span></div>
                         </div>
                     </div>
 
-                    <div id="receipt-output" class="no-print" style="display:flex; justify-content:center;">
+                    <div id="receipt-output" style="display:flex; justify-content:center;">
                         <div style="opacity:0.2; text-align:center; padding-top:100px;">
                             <i class="fas fa-receipt" style="font-size:5rem;"></i>
-                            <p style="margin-top:20px; letter-spacing:5px; font-weight:800;">WAITING FOR DATA</p>
+                            <p style="margin-top:20px; letter-spacing:5px; font-weight:800;">AWAITING DATA UPLINK</p>
                         </div>
                     </div>
                 </div>
@@ -298,57 +319,30 @@
                 <div class="stat-card" style="margin-bottom:30px; border-left: 5px solid var(--warning);">
                     <h4>Estimated iTax Liability</h4>
                     <div class="val" id="tax-due-big" style="font-size:5rem; margin:20px 0;">KES 0</div>
-                    <p style="color:var(--text-dim);">Based on current month's digital services revenue at Kamwangi Node.</p>
-                </div>
-                <div class="data-table-container">
-                    <table>
-                        <thead><tr><th>Month</th><th>Gross Revenue</th><th>Taxable (16%)</th><th>Status</th></tr></thead>
-                        <tbody>
-                            <tr><td>March 2026</td><td id="t-m-gross">KES 0</td><td id="t-m-vat">KES 0</td><td><span style="color:var(--warning)">Pending</span></td></tr>
-                            <tr><td>February 2026</td><td>KES 145,200</td><td>KES 23,232</td><td><span style="color:var(--success)">Paid</span></td></tr>
-                        </tbody>
-                    </table>
+                    <p style="color:var(--text-dim);">Real-time calculation based on 16% VAT standard.</p>
                 </div>
             </section>
 
+            <section id="tab-payroll" class="view-section"><div class="stat-card"><h3>Staff Commissions & Performance</h3></div></section>
+            <section id="tab-expenses" class="view-section"><div class="stat-card"><h3>Operational OPEX Tracker</h3></div></section>
             <section id="tab-inventory" class="view-section">
                 <div class="stats-grid">
-                    <div class="stat-card"><h4>A4 Paper Rim</h4><div class="val">42</div><div style="color:var(--success); font-size:0.7rem;">+5 Today</div></div>
-                    <div class="stat-card"><h4>Epson Black Ink</h4><div class="val">85%</div><div style="color:var(--text-dim); font-size:0.7rem;">Level Optimal</div></div>
-                    <div class="stat-card"><h4>Epson Cyan/Y/M</h4><div class="val">62%</div><div style="color:var(--text-dim); font-size:0.7rem;">Level Optimal</div></div>
-                    <div class="stat-card"><h4>Sublimation Paper</h4><div class="val">12</div><div style="color:var(--danger); font-size:0.7rem;">Low Stock</div></div>
+                    <div class="stat-card"><h4>A4 Paper Rim</h4><div class="val">42</div></div>
+                    <div class="stat-card"><h4>Epson Black Ink</h4><div class="val">85%</div></div>
+                    <div class="stat-card"><h4>Epson Color</h4><div class="val">62%</div></div>
                 </div>
             </section>
-
-            <section id="tab-network" class="view-section">
-                <div class="chart-container" style="height:500px;">
-                    <h4>Live Node Latency (Kamwangi - Safaricom Fiber)</h4>
-                    <canvas id="netChart"></canvas>
-                </div>
-            </section>
-
+            <section id="tab-assets" class="view-section"><div class="stat-card"><h3>Hardware Asset Ledger (Printers/PCs)</h3></div></section>
+            <section id="tab-maint" class="view-section"><div class="stat-card"><h3>Service & Maintenance Logs</h3></div></section>
+            <section id="tab-network" class="view-section"><div class="chart-container"><canvas id="netChart"></canvas></div></section>
             <section id="tab-settings" class="view-section">
                 <div class="data-panel" style="background:var(--card-bg); padding:40px; border-radius:24px;">
-                    <h3>ERP Configuration</h3>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:30px; margin-top:30px;">
-                        <div>
-                            <label style="display:block; margin-bottom:10px;">Business Name</label>
-                            <input type="text" class="cyber-input" value="MS-CYBER SERVICES">
-                        </div>
-                        <div>
-                            <label style="display:block; margin-bottom:10px;">P.O. Box</label>
-                            <input type="text" class="cyber-input" value="91 KANJUKU">
-                        </div>
-                    </div>
+                    <h3>ERP System Configuration</h3>
+                    <p>Business Location: Kamwangi Town branch | P.O. Box 91 Kanjuku</p>
                 </div>
             </section>
-
             <section id="tab-logs" class="view-section">
-                <div id="console-output" style="background:#000; color:var(--success); font-family:var(--font-code); padding:30px; border-radius:15px; height:600px; overflow-y:auto; font-size:0.8rem; border:1px solid var(--primary);">
-                    [SYSTEM] OS INITIALIZED...<br>
-                    [INFO] UPLINK TO KAMWANGI NODE SECURE...<br>
-                    [STATUS] ALL TABS LOADED.
-                </div>
+                <div id="console-output" style="background:#000; color:var(--success); font-family:var(--font-code); padding:30px; border-radius:15px; height:600px; overflow-y:auto; font-size:0.8rem; border:1px solid var(--primary);"></div>
             </section>
 
         </div>
@@ -359,7 +353,7 @@
         import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // CLOUD CONFIG
+        // ENTERPRISE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyAqPGDu8ZzHski-wi9PtoCw39jfNgsR5fM",
             authDomain: "ms-cyber.firebaseapp.com",
@@ -373,11 +367,11 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // --- AUTH ENGINE ---
+        // --- AUTH PROTOCOL ---
         onAuthStateChanged(auth, (user) => {
             if (user) { 
                 document.getElementById('auth-gate').style.display = 'none'; 
-                loadBusinessIntelligence(); 
+                initializeIntelligence(); 
             } else { 
                 document.getElementById('auth-gate').style.display = 'flex'; 
             }
@@ -393,113 +387,82 @@
 
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
 
-        // --- SPA NAVIGATION LOGIC ---
+        // --- NAVIGATION ENGINE ---
         const navLinks = document.querySelectorAll('.nav-link');
         const sections = document.querySelectorAll('.view-section');
-        const pageTitle = document.getElementById('page-title');
 
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 const target = link.getAttribute('data-tab');
-                
-                // Switch Active State
                 navLinks.forEach(l => l.classList.remove('active'));
                 link.classList.add('active');
-
-                // Switch Visibility
                 sections.forEach(s => s.classList.remove('active'));
                 document.getElementById('tab-' + target).classList.add('active');
-
-                // Update Header
-                pageTitle.innerText = link.innerText;
-                pushLog("USER_NAV: Navigated to " + target.toUpperCase());
+                document.getElementById('page-title').innerText = link.innerText;
+                pushLog("NAV: Jumped to " + target.toUpperCase());
             });
         });
 
-        // --- MASTER DATA SYNC ---
-        let globalOrders = [];
-        function loadBusinessIntelligence() {
+        // --- MASTER DATA SYNC (FISCAL) ---
+        let orders = [];
+        function initializeIntelligence() {
             const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
             onSnapshot(q, (snap) => {
-                globalOrders = [];
-                let gross = 0;
-                let rows = '';
-                let staffCom = {};
-
+                orders = []; let gross = 0; let tableRows = '';
+                
                 snap.forEach(doc => {
-                    const data = doc.data();
-                    globalOrders.push(data);
-                    
-                    let amt = (data.service || "").toLowerCase().includes('helb') ? 500 : 200;
-                    gross += amt;
-                    
-                    rows += `
-                        <tr>
-                            <td style="font-family:var(--font-code); color:var(--primary); font-weight:700;">#${data.manifestId}</td>
-                            <td>${data.fName || 'ADMIN'}</td>
-                            <td>${data.service}</td>
-                            <td style="font-weight:700;">KES ${amt}</td>
-                            <td style="color:var(--text-dim); font-size:0.8rem;">${data.timestamp?.toDate().toLocaleString()}</td>
-                            <td><span style="color:var(--success); font-size:0.7rem; font-weight:800;">● SYNCED</span></td>
-                        </tr>
-                    `;
+                    const data = doc.data(); orders.push(data);
+                    let price = (data.service || "").toLowerCase().includes('helb') ? 500 : 200;
+                    gross += price;
+                    tableRows += `<tr><td style="color:var(--primary); font-weight:700;">#${data.manifestId}</td><td>${data.fName || 'ADMIN'}</td><td>${data.service}</td><td>KES ${price}</td><td>${data.timestamp?.toDate().toLocaleString()}</td><td><span style="color:var(--success)">VERIFIED</span></td></tr>`;
                 });
 
-                // Update Global Dash
-                document.getElementById('sales-tbody').innerHTML = rows;
+                document.getElementById('sales-tbody').innerHTML = tableRows;
                 document.getElementById('d-gross').innerText = `KES ${gross.toLocaleString()}`;
                 document.getElementById('d-tax').innerText = `KES ${(gross * 0.16).toFixed(0)}`;
                 document.getElementById('d-qty').innerText = snap.size;
                 document.getElementById('d-net').innerText = `KES ${(gross * 0.74).toFixed(0)}`;
-                
-                // Update Tax Tab
                 document.getElementById('tax-due-big').innerText = `KES ${(gross * 0.16).toFixed(0)}`;
-                document.getElementById('t-m-gross').innerText = `KES ${gross.toLocaleString()}`;
-                document.getElementById('t-m-vat').innerText = `KES ${(gross * 0.16).toFixed(0)}`;
-
-                pushLog("DATA_SYNC: Cloud database updated with " + snap.size + " records.");
+                pushLog("UPLINK: Data Manifest Updated (" + snap.size + " Records)");
             });
         }
 
-        // --- RECEIPT COMPILER ---
+        // --- HARDWARE RECEIPT COMPILER ---
         window.generateReceipt = () => {
             const ref = document.getElementById('receipt-ref').value;
-            const record = globalOrders.find(o => o.manifestId == ref);
+            const r = orders.find(o => o.manifestId == ref);
+            if(!r) return alert("ERROR: Ref ID Not Found.");
 
-            if(!record) return alert("ERROR: Reference ID not found in current buffer.");
-
-            const html = `
+            document.getElementById('receipt-output').innerHTML = `
                 <div class="receipt-paper">
                     <div class="receipt-center">
-                        <h2 style="font-family:'Outfit'; margin-bottom:5px;">MS-CYBER SERVICES</h2>
-                        <p>KAMWANGI TOWN, P.O. BOX 91 KANJUKU</p>
-                        <p>Adjacent to KMTC Kamwangi, Kiambu</p>
+                        <h2 style="font-family:'Outfit';">MS-CYBER SERVICES</h2>
+                        <p>KAMWANGI TOWN branch</p>
+                        <p>P.O. BOX 91 KANJUKU</p>
                         <p>Tel: +254 7XX XXX XXX</p>
                     </div>
                     <div class="receipt-line"></div>
-                    <div class="receipt-row"><span>Ref ID:</span><span>#${record.manifestId}</span></div>
-                    <div class="receipt-row"><span>Date:</span><span>${record.timestamp?.toDate().toLocaleDateString()}</span></div>
-                    <div class="receipt-row"><span>Operator:</span><span>${record.fName || 'ADMIN'}</span></div>
+                    <div class="receipt-row"><span>REF:</span><span>#${r.manifestId}</span></div>
+                    <div class="receipt-row"><span>DATE:</span><span>${r.timestamp?.toDate().toLocaleDateString()}</span></div>
+                    <div class="receipt-row"><span>OPERATOR:</span><span>${r.fName || 'ADMIN'}</span></div>
                     <div class="receipt-line"></div>
-                    <div class="receipt-row" style="font-weight:bold;"><span>Service</span><span>Total</span></div>
-                    <div class="receipt-row"><span>${record.service}</span><span>200.00</span></div>
+                    <div class="receipt-row" style="font-weight:bold;"><span>DESCRIPTION</span><span>AMT</span></div>
+                    <div class="receipt-row"><span>${r.service}</span><span>200.00</span></div>
                     <div class="receipt-line"></div>
-                    <div class="receipt-row"><span>Subtotal:</span><span>172.41</span></div>
+                    <div class="receipt-row"><span>SUBTOTAL:</span><span>172.41</span></div>
                     <div class="receipt-row"><span>VAT (16%):</span><span>27.59</span></div>
                     <div class="receipt-row" style="font-size:16px; font-weight:bold; margin-top:10px;">
                         <span>TOTAL:</span><span>KES 200.00</span>
                     </div>
                     <div class="receipt-line"></div>
-                    <div class="receipt-center" style="margin-top:30px;">
-                        <p>Digital & Printing Excellence</p>
-                        <p>No refund for services once processed.</p>
+                    <div class="receipt-center">
+                        <p>Professional Digital Solutions</p>
                         <p>Thank you for choosing MS-Cyber!</p>
-                        <div style="height:40px; background:repeating-linear-gradient(90deg, #000, #000 4px, #fff 4px, #fff 8px); margin-top:20px;"></div>
+                        <div style="height:35px; background:repeating-linear-gradient(90deg, #000, #000 4px, #fff 4px, #fff 8px); margin-top:15px;"></div>
                     </div>
                 </div>
             `;
-            document.getElementById('receipt-output').innerHTML = html;
-            pushLog("PRINTER: Thermal document compiled for REF #" + ref);
+            pushLog("COMPILER: Thermal data mapped for REF #" + ref);
         };
 
         function pushLog(msg) {
@@ -508,49 +471,9 @@
             c.scrollTop = c.scrollHeight;
         }
 
-        // --- ANALYTICS ENGINE (CHARTS) ---
-        new Chart(document.getElementById('revChart'), {
-            type: 'line',
-            data: {
-                labels: ['08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00'],
-                datasets: [{
-                    label: 'Revenue',
-                    data: [1200, 3100, 6800, 4200, 9500, 6100, 11000],
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
-        });
-
-        new Chart(document.getElementById('serviceChart'), {
-            type: 'doughnut',
-            data: {
-                labels: ['KRA', 'Printing', 'HELB', 'Others'],
-                datasets: [{
-                    data: [40, 25, 20, 15],
-                    backgroundColor: ['#2563eb', '#10b981', '#f59e0b', '#6b7280'],
-                    borderWidth: 0
-                }]
-            },
-            options: { maintainAspectRatio: false }
-        });
-
-        new Chart(document.getElementById('netChart'), {
-            type: 'line',
-            data: {
-                labels: ['1m', '2m', '3m', '4m', '5m'],
-                datasets: [{
-                    label: 'Latency (ms)',
-                    data: [12, 9, 11, 8, 10],
-                    borderColor: '#10b981',
-                    tension: 0.1
-                }]
-            },
-            options: { maintainAspectRatio: false }
-        });
+        // --- ANALYTICS ---
+        new Chart(document.getElementById('revChart'), { type: 'line', data: { labels: ['08:00','12:00','16:00','20:00'], datasets: [{ label: 'KES', data: [1200, 6800, 9500, 11000], borderColor: '#2563eb', fill: true, backgroundColor: 'rgba(37, 99, 235, 0.1)', tension: 0.4 }] }, options: { maintainAspectRatio: false } });
+        new Chart(document.getElementById('serviceChart'), { type: 'doughnut', data: { labels: ['KRA','Print','HELB'], datasets: [{ data: [40, 30, 30], backgroundColor: ['#2563eb','#10b981','#f59e0b'], borderWidth: 0 }] }, options: { maintainAspectRatio: false } });
 
     </script>
 </body>
