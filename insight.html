@@ -1,1 +1,278 @@
-shame on you
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MS-cyber services 0.0 | Enterprise Data Science Matrix</title>
+    <link rel="icon" type="image/png" href="31.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary: #3b82f6; --p-glow: rgba(59, 130, 246, 0.25);
+            --accent: #00f2ff; --success: #10b981; --error: #ef4444; --warning: #f59e0b;
+            --bg: #020617; --surface: #0f172a; --border: rgba(255, 255, 255, 0.07);
+            --text: #f8fafc; --text-dim: #94a3b8; --panel: rgba(15, 23, 42, 0.98);
+        }
+
+        /* --- GLOBAL ARCHITECTURE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        
+        body { 
+            background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif;
+            display: flex; height: 100vh; overflow: hidden; font-size: 14px;
+        }
+
+        /* --- AUTH OVERLAY --- */
+        #auth-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: var(--bg); z-index: 9999; display: flex; 
+            align-items: center; justify-content: center; backdrop-filter: blur(20px);
+        }
+        .auth-card {
+            background: var(--surface); border: 1px solid var(--border); 
+            padding: 40px; border-radius: 24px; width: 380px; text-align: center;
+            box-shadow: 0 0 50px rgba(59, 130, 246, 0.1);
+        }
+        .auth-card h1 { font-family: 'Orbitron'; font-size: 1rem; margin-bottom: 30px; color: var(--primary); letter-spacing: 2px; }
+
+        /* --- SIDEBAR --- */
+        aside {
+            width: 280px; background: var(--panel); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; padding: 20px; backdrop-filter: blur(60px);
+            z-index: 2000; overflow-y: auto; transition: 0.3s;
+        }
+        .brand { text-align: center; padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 15px; }
+        .brand h1 { font-family: 'Orbitron'; font-size: 0.8rem; letter-spacing: 3px; color: #fff; text-shadow: 0 0 10px var(--primary); }
+
+        .nav-section { margin-bottom: 20px; }
+        .nav-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; padding: 10px 12px; font-weight: 800; display: block; }
+        
+        .nav-btn {
+            padding: 12px 16px; border-radius: 12px; display: flex; align-items: center; gap: 14px;
+            color: var(--text-dim); cursor: pointer; transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            margin-bottom: 4px; font-weight: 700; font-size: 0.78rem; border: 1px solid transparent;
+        }
+        .nav-btn i { width: 18px; font-size: 1rem; }
+        .nav-btn:hover { background: var(--p-glow); color: var(--primary); transform: translateX(5px); }
+        .nav-btn.active { background: var(--primary); color: white; border-color: rgba(255,255,255,0.1); box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); }
+
+        /* --- VIEWPORT ENGINE --- */
+        main { flex: 1; overflow-y: auto; padding: 40px; position: relative; background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.03), transparent); }
+        .header-ui { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        
+        .tab-content { display: none; animation: quantumSlide 0.5s ease-out; }
+        .tab-content.active { display: block; }
+        @keyframes quantumSlide { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- PROFESSIONAL CARDS & DATA --- */
+        .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .card { background: var(--surface); border: 1px solid var(--border); padding: 25px; border-radius: 24px; position: relative; transition: 0.3s; }
+        .card h6 { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
+        .card h2 { font-size: 1.8rem; font-family: 'JetBrains Mono'; font-weight: 800; }
+
+        .data-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 25px; margin-top: 25px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
+        th { text-align: left; padding: 12px; font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; }
+        td { padding: 18px 12px; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+
+        /* --- UI COMPONENTS --- */
+        .ms-input { width: 100%; padding: 15px; background: #0b1121; border: 1px solid var(--border); color: #fff; border-radius: 14px; font-size: 0.85rem; margin-bottom: 20px; }
+        .ms-btn { width: 100%; padding: 18px; background: var(--primary); border: none; color: #fff; border-radius: 14px; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .ms-btn:hover { background: #2563eb; transform: translateY(-2px); }
+
+        /* --- RECEIPT STYLE --- */
+        .receipt-container { width: 320px; margin: 0 auto; background: #fff; color: #000; padding: 25px; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+        .barcode { height: 40px; background: repeating-linear-gradient(90deg, #000, #000 2px, #fff 2px, #fff 4px); margin: 20px 0; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #printable, #printable * { visibility: visible; }
+            #printable { position: absolute; left: 0; top: 0; width: 80mm; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="auth-overlay">
+        <div class="auth-card">
+            <h1>MATRIX LOGIN</h1>
+            <input type="email" id="auth-email" class="ms-input" placeholder="Neural ID (Email)">
+            <input type="password" id="auth-password" class="ms-input" placeholder="Access Key">
+            <button class="ms-btn" id="btn-login"><i class="fas fa-key"></i> INITIATE UPLINK</button>
+            <p id="auth-error" style="color:var(--error); font-size:0.7rem; margin-top:15px; display:none; font-weight: 800;"></p>
+        </div>
+    </div>
+
+    <aside class="no-print">
+        <div class="brand"><h1>MS CYBER</h1></div>
+        
+        <div class="nav-section">
+            <span class="nav-label">Core Intelligence</span>
+            <div class="nav-btn active" onclick="go('dash', this)"><i class="fas fa-chart-pie"></i> Executive Insight</div>
+            <div class="nav-btn" onclick="go('registry', this)"><i class="fas fa-database"></i> Master Registry</div>
+            <div class="nav-btn" onclick="go('thermal', this)"><i class="fas fa-receipt"></i> Thermal Engine</div>
+        </div>
+
+        <div class="nav-section">
+            <span class="nav-label">Management</span>
+            <div class="nav-btn" onclick="go('terminal', this)"><i class="fas fa-terminal"></i> Neural Console</div>
+            <div class="nav-btn" style="color:var(--error); margin-top:20px;" id="btn-logout"><i class="fas fa-power-off"></i> Terminate Link</div>
+        </div>
+    </aside>
+
+    <main>
+        <div class="header-ui no-print">
+            <div>
+                <h2 id="v-title" style="font-family:'Orbitron'; font-size:1.2rem;">EXECUTIVE INSIGHT</h2>
+                <p id="v-desc" style="color:var(--text-dim); font-size:0.75rem;">Real-time synthesis of enterprise data nodes.</p>
+            </div>
+            <div class="badge" style="border: 1px solid var(--primary); padding: 5px 15px; border-radius: 8px; font-size: 0.7rem; color: var(--primary);">UPLINK: ACTIVE</div>
+        </div>
+
+        <div id="dash" class="tab-content active">
+            <div class="metric-grid">
+                <div class="card"><h6>Gross Revenue</h6><h2 id="k-rev">KES 0</h2></div>
+                <div class="card"><h6>Manifest Vol</h6><h2 id="k-count">0</h2></div>
+                <div class="card"><h6>Efficiency</h6><h2>94.8%</h2></div>
+                <div class="card"><h6>Status</h6><h2 style="color:var(--success)">SECURE</h2></div>
+            </div>
+            <div style="height: 350px; background: var(--surface); border-radius: 24px; padding: 20px; border: 1px solid var(--border);">
+                <canvas id="revChart"></canvas>
+            </div>
+        </div>
+
+        <div id="registry" class="tab-content">
+            <div class="data-wrap">
+                <table>
+                    <thead><tr><th>Ref ID</th><th>Service Node</th><th>Yield</th><th>Timestamp</th><th>Status</th></tr></thead>
+                    <tbody id="reg-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="thermal" class="tab-content">
+            <div style="display:grid; grid-template-columns: 350px 1fr; gap:40px;">
+                <div class="data-wrap no-print">
+                    <input type="text" id="t-input" class="ms-input" placeholder="Enter Manifest Reference #">
+                    <button class="ms-btn" onclick="buildThermal()"><i class="fas fa-print"></i> EXECUTE PRINT</button>
+                </div>
+                <div id="thermal-viewport"></div>
+            </div>
+        </div>
+
+        <div id="terminal" class="tab-content">
+            <div class="data-wrap" style="background:#000; height:500px; color:var(--success); font-family:'JetBrains Mono'; overflow-y:auto; padding: 20px;" id="console-stream">
+                [SYSTEM] INITIALIZING MS-QUANTUM...<br>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // CONFIGURATION
+        const firebaseConfig = {
+            apiKey: "AIzaSyAqPGDu8ZzHski-wi9PtoCw39jfNgsR5fM",
+            authDomain: "ms-cyber.firebaseapp.com",
+            projectId: "ms-cyber",
+            storageBucket: "ms-cyber.firebasestorage.app",
+            messagingSenderId: "189332452684",
+            appId: "1:189332452684:web:ff6ab7e43d72db667ecbe9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // --- AUTH CONTROL ---
+        const authOverlay = document.getElementById('auth-overlay');
+        const loginBtn = document.getElementById('btn-login');
+        const logoutBtn = document.getElementById('btn-logout');
+        const errorMsg = document.getElementById('auth-error');
+
+        loginBtn.addEventListener('click', () => {
+            const email = document.getElementById('auth-email').value;
+            const pass = document.getElementById('auth-password').value;
+            signInWithEmailAndPassword(auth, email, pass).catch(err => {
+                errorMsg.style.display = 'block';
+                errorMsg.innerText = "ACCESS DENIED: INVALID SEQUENCE";
+            });
+        });
+
+        logoutBtn.addEventListener('click', () => signOut(auth));
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                authOverlay.style.display = 'none';
+                initDataSync();
+            } else {
+                authOverlay.style.display = 'flex';
+            }
+        });
+
+        // --- DATA ENGINE ---
+        let mainArchive = [];
+        function initDataSync() {
+            const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
+            onSnapshot(q, (snap) => {
+                const rBody = document.getElementById('reg-body');
+                let rHtml = ''; let total = 0;
+                mainArchive = [];
+                snap.forEach(doc => {
+                    const d = doc.data(); mainArchive.push(d);
+                    let price = d.service?.toLowerCase().includes('helb') ? 500 : 200;
+                    total += price;
+                    rHtml += `<tr><td>#${d.manifestId}</td><td style="text-transform:uppercase;">${d.service}</td><td style="color:var(--success)">KES ${price}</td><td>${d.timestamp?.toDate().toLocaleTimeString()}</td><td>DONE</td></tr>`;
+                });
+                rBody.innerHTML = rHtml;
+                document.getElementById('k-rev').innerText = `KES ${total.toLocaleString()}`;
+                document.getElementById('k-count').innerText = snap.size;
+            });
+        }
+
+        // --- CHARTING ---
+        const ctx = document.getElementById('revChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: { labels: ['08:00','10:00','12:00','14:00','16:00'], datasets: [{ data: [1200, 3100, 4500, 2900, 5200], borderColor: '#3b82f6', tension: 0.4 }] },
+            options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+
+        // --- NAVIGATION ---
+        window.go = (id, el) => {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            el.classList.add('active');
+        };
+
+        // --- THERMAL BUILDER ---
+        window.buildThermal = () => {
+            const mid = document.getElementById('t-input').value;
+            const d = mainArchive.find(x => x.manifestId == mid);
+            if(!d) return alert("Reference not found.");
+            document.getElementById('thermal-viewport').innerHTML = `
+                <div class="receipt-container" id="printable">
+                    <div style="text-align:center; border-bottom:1px dashed #000; padding-bottom:10px;">
+                        <h2>MS CYBER GLOBAL</h2>
+                        <p>KAMWANGI TOWN, KIAMBU</p>
+                    </div>
+                    <p style="margin-top:10px;">REF: #${d.manifestId}</p>
+                    <p>SERVICE: ${d.service}</p>
+                    <div style="border-top:2px solid #000; margin:10px 0; padding:10px 0; font-weight:900;">TOTAL: KES 200.00</div>
+                    <div class="barcode"></div>
+                </div>
+            `;
+        };
+    </script>
+</body>
+</html>
