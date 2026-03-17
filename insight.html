@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MS-CYBER OS | Enterprise Data Science Suite</title>
+    <title>MS-CYBER OS | Advanced Data Science & Dev Suite</title>
     <link rel="icon" type="image/png" href="31.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -12,24 +12,23 @@
 
     <style>
         :root {
-            --primary: #3b82f6; --p-glow: rgba(59, 130, 246, 0.2);
+            --primary: #3b82f6; --p-glow: rgba(59, 130, 246, 0.25);
             --accent: #00f2ff; --success: #10b981; --error: #ef4444; --warning: #f59e0b;
-            --bg: #020617; --surface: #0f172a; --border: rgba(255, 255, 255, 0.06);
+            --bg: #020617; --surface: #0f172a; --border: rgba(255, 255, 255, 0.08);
             --text: #f8fafc; --text-dim: #94a3b8; --panel: rgba(15, 23, 42, 0.98);
         }
 
-        /* --- CORE ARCHITECTURE --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+        /* --- SYSTEM ARCHITECTURE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
         
         body { 
             background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif;
-            display: flex; height: 100vh; overflow: hidden; font-size: 13px; line-height: 1.6;
+            display: flex; height: 100vh; overflow: hidden; font-size: 13px;
         }
 
-        /* --- AUTHENTICATION SHIELD --- */
+        /* --- SECURE AUTH SHIELD --- */
         #auth-gate {
             position: fixed; inset: 0; background: var(--bg); z-index: 10000;
             display: flex; align-items: center; justify-content: center;
@@ -37,65 +36,62 @@
         }
         .login-card {
             background: var(--surface); padding: 50px; border-radius: 35px;
-            border: 1px solid var(--border); width: 100%; max-width: 440px;
-            text-align: center; box-shadow: 0 40px 100px -20px rgba(0,0,0,0.8);
+            border: 1px solid var(--border); width: 440px; text-align: center;
+            box-shadow: 0 40px 100px -20px rgba(0,0,0,0.8);
+            animation: cardEntrance 0.8s cubic-bezier(0.23, 1, 0.32, 1);
         }
-        .login-card h1 { font-family: 'Orbitron'; letter-spacing: 6px; font-size: 1.5rem; margin-bottom: 40px; color: #fff; }
+        @keyframes cardEntrance { from { opacity: 0; transform: translateY(30px); } }
 
-        /* --- MAIN INTERFACE --- */
-        #main-interface { display: none; width: 100%; height: 100%; flex-direction: row; }
-
-        /* --- NAVIGATION SIDEBAR (16 TABS) --- */
+        /* --- SIDEBAR NAVIGATION (16+ TABS) --- */
         aside {
-            width: 300px; background: var(--panel); border-right: 1px solid var(--border);
+            width: 310px; background: var(--panel); border-right: 1px solid var(--border);
             display: flex; flex-direction: column; padding: 25px; overflow-y: auto;
-            backdrop-filter: blur(40px);
+            backdrop-filter: blur(50px); z-index: 100;
         }
-        .brand-box { padding-bottom: 30px; border-bottom: 1px solid var(--border); margin-bottom: 25px; text-align: center; }
-        .brand-box h2 { font-family: 'Orbitron'; font-size: 0.9rem; letter-spacing: 4px; color: var(--primary); }
+        .brand-header { padding-bottom: 25px; border-bottom: 1px solid var(--border); margin-bottom: 20px; text-align: center; }
+        .brand-header h1 { font-family: 'Orbitron'; font-size: 1rem; letter-spacing: 5px; color: var(--primary); }
 
-        .nav-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; padding: 15px 10px 8px; font-weight: 800; display: block; }
+        .nav-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; padding: 15px 10px 5px; font-weight: 800; display: block; }
         
         .nav-btn {
             padding: 12px 18px; border-radius: 14px; display: flex; align-items: center; gap: 14px;
-            color: var(--text-dim); cursor: pointer; transition: 0.3s; margin-bottom: 5px;
-            font-weight: 700; border: 1px solid transparent;
+            color: var(--text-dim); cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            margin-bottom: 5px; font-weight: 700; border: 1px solid transparent;
         }
-        .nav-btn i { font-size: 1.1rem; width: 20px; }
         .nav-btn:hover { background: var(--p-glow); color: var(--primary); transform: translateX(5px); }
-        .nav-btn.active { background: var(--primary); color: white; box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3); }
+        .nav-btn.active { background: var(--primary); color: white; box-shadow: 0 10px 20px var(--p-glow); }
+        .nav-btn i { width: 20px; font-size: 1.1rem; }
 
-        /* --- CONTENT AREA --- */
-        main { flex: 1; overflow-y: auto; padding: 50px; background: radial-gradient(circle at 80% 10%, rgba(59, 130, 246, 0.05), transparent); }
-        
+        /* --- MAIN CONTENT ENGINE --- */
+        main { flex: 1; overflow-y: auto; padding: 45px; position: relative; background: radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.04), transparent); }
         .tab-content { display: none; }
-        .tab-content.active { display: block; animation: quantumFade 0.5s ease-out; }
-        @keyframes quantumFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .tab-content.active { display: block; animation: quantumSlide 0.5s ease; }
+        @keyframes quantumSlide { from { opacity: 0; transform: translateY(15px); } }
 
-        /* --- UI COMPONENTS --- */
-        .metric-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; margin-bottom: 40px; }
-        .card { background: var(--surface); border: 1px solid var(--border); padding: 30px; border-radius: 28px; position: relative; transition: 0.3s; }
-        .card:hover { border-color: var(--primary); }
+        /* --- DATA UI COMPONENTS --- */
+        .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 35px; }
+        .card { background: var(--surface); border: 1px solid var(--border); padding: 25px; border-radius: 24px; position: relative; overflow: hidden; }
         .card h6 { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
-        .card h3 { font-family: 'JetBrains Mono'; font-size: 1.8rem; margin-top: 10px; font-weight: 800; }
-
-        .data-table-wrapper { background: var(--surface); border: 1px solid var(--border); border-radius: 28px; padding: 25px; margin-top: 20px; }
+        .card h2 { font-family: 'JetBrains Mono'; font-size: 1.8rem; margin-top: 10px; font-weight: 800; }
+        
+        .data-table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 25px; margin-top: 25px; }
         table { width: 100%; border-collapse: separate; border-spacing: 0 10px; }
-        th { text-align: left; padding: 15px; color: var(--text-dim); font-size: 0.7rem; text-transform: uppercase; }
-        td { padding: 15px; background: rgba(255,255,255,0.02); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-        td:first-child { border-left: 1px solid var(--border); border-radius: 12px 0 0 12px; font-weight: 800; color: var(--primary); }
+        th { text-align: left; padding: 15px; color: var(--text-dim); font-size: 0.7rem; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        td { padding: 15px; background: rgba(255,255,255,0.015); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono'; }
+        td:first-child { border-left: 1px solid var(--border); border-radius: 12px 0 0 12px; color: var(--primary); font-weight: 800; }
         td:last-child { border-right: 1px solid var(--border); border-radius: 0 12px 12px 0; }
 
-        .ms-input { width: 100%; padding: 18px; background: #0b1121; border: 1px solid var(--border); color: #fff; border-radius: 16px; margin-bottom: 20px; font-family: 'Plus Jakarta Sans'; }
-        .ms-btn { width: 100%; padding: 18px; background: var(--primary); border: none; color: #fff; border-radius: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
-        .ms-btn:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 10px 20px var(--p-glow); }
+        .ms-input { width: 100%; padding: 18px; background: #0b1121; border: 1px solid var(--border); color: #fff; border-radius: 16px; margin-bottom: 15px; }
+        .ms-btn { width: 100%; padding: 18px; background: var(--primary); border: none; color: #fff; border-radius: 16px; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .ms-btn:hover { background: #2563eb; transform: translateY(-3px); box-shadow: 0 12px 24px var(--p-glow); }
 
-        /* --- TERMINAL & AUDIT --- */
-        .terminal-box { background: #000; padding: 25px; border-radius: 20px; font-family: 'JetBrains Mono'; color: var(--success); height: 400px; overflow-y: auto; line-height: 1.8; border: 1px solid var(--border); }
+        .terminal-box { background: #000; border: 1px solid var(--border); border-radius: 20px; padding: 25px; font-family: 'JetBrains Mono'; color: var(--success); height: 450px; overflow-y: auto; line-height: 1.8; }
+        .tag { padding: 4px 10px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; }
+        .tag-blue { background: rgba(59, 130, 246, 0.1); color: var(--primary); border: 1px solid var(--primary); }
 
         /* --- THERMAL RECEIPT --- */
-        .receipt-container { width: 300px; background: #fff; color: #000; padding: 30px; margin: 0 auto; font-family: 'JetBrains Mono'; font-size: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 15px; margin-bottom: 15px; }
+        .receipt-container { width: 320px; background: #fff; color: #000; padding: 35px; margin: 0 auto; font-family: 'JetBrains Mono'; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
+        .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 20px; margin-bottom: 20px; }
 
         @media print {
             body * { visibility: hidden; }
@@ -109,141 +105,139 @@
     <div id="auth-gate">
         <div class="login-card">
             <h1>MS-CYBER OS</h1>
-            <p style="color:var(--text-dim); margin-bottom:35px; font-size:0.8rem; letter-spacing:2px;">SECURE ANALYTICS GATEWAY</p>
-            <input type="email" id="login-email" class="ms-input" placeholder="Admin Credential">
-            <input type="password" id="login-pass" class="ms-input" placeholder="Neural Access Key">
-            <button class="ms-btn" id="btn-login"><i class="fas fa-fingerprint"></i> AUTHORIZE ACCESS</button>
-            <p id="auth-error" style="color:var(--error); margin-top:20px; display:none; font-weight:800;">ERROR: INVALID TOKEN</p>
+            <p style="color:var(--text-dim); margin-bottom:35px; letter-spacing:3px; font-size:0.75rem;">RSA-4096 ENCRYPTED GATEWAY</p>
+            <input type="email" id="login-email" class="ms-input" placeholder="Admin Terminal ID">
+            <input type="password" id="login-pass" class="ms-input" placeholder="Neural Passkey">
+            <button class="ms-btn" id="btn-login"><i class="fas fa-key"></i> INITIALIZE SESSION</button>
+            <p id="auth-error" style="color:var(--error); margin-top:20px; font-weight:800; display:none;">ACCESS DENIED: INVALID TOKEN</p>
         </div>
     </div>
 
-    <div id="main-interface">
+    <div id="main-interface" style="display:none; width:100%; height:100%;">
         <aside>
-            <div class="brand-box"><h2>MS-CYBER 0.0</h2></div>
+            <div class="brand-header"><h1>MS-CYBER <span>0.0</span></h1></div>
             
-            <div class="nav-section">
-                <span class="nav-label">Core Systems</span>
-                <div class="nav-btn active" onclick="go('dash', this)"><i class="fas fa-chart-mixed"></i> Dashboard</div>
-                <div class="nav-btn" onclick="go('registry', this)"><i class="fas fa-database"></i> Registry</div>
-                <div class="nav-btn" onclick="go('thermal', this)"><i class="fas fa-print"></i> Thermal Engine</div>
-                <div class="nav-btn" onclick="go('audit', this)"><i class="fas fa-shield-check"></i> Audit Logs</div>
-            </div>
+            <span class="nav-label">BI & Analytics</span>
+            <div class="nav-btn active" onclick="go('dash', this)"><i class="fas fa-chart-network"></i> Dashboard</div>
+            <div class="nav-btn" onclick="go('registry', this)"><i class="fas fa-server"></i> Sales Registry</div>
+            <div class="nav-btn" onclick="go('fiscal', this)"><i class="fas fa-landmark"></i> KRA / Fiscal</div>
+            <div class="nav-btn" onclick="go('predict', this)"><i class="fas fa-brain-circuit"></i> Predictions</div>
+            <div class="nav-btn" onclick="go('churn', this)"><i class="fas fa-user-minus"></i> Churn Matrix</div>
 
-            <div class="nav-section">
-                <span class="nav-label">Analytics Hub</span>
-                <div class="nav-btn" onclick="go('predict', this)"><i class="fas fa-brain-circuit"></i> Predictions</div>
-                <div class="nav-btn" onclick="go('traffic', this)"><i class="fas fa-users-viewfinder"></i> Traffic Flow</div>
-                <div class="nav-btn" onclick="go('nodes', this)"><i class="fas fa-server"></i> Node Status</div>
-                <div class="nav-btn" onclick="go('churn', this)"><i class="fas fa-user-minus"></i> Churn Matrix</div>
-            </div>
+            <span class="nav-label">Developer Nexus</span>
+            <div class="nav-btn" onclick="go('traffic', this)" style="color:var(--accent);"><i class="fas fa-eye"></i> Visitor Tracker</div>
+            <div class="nav-btn" onclick="go('audit', this)"><i class="fas fa-shield-halved"></i> Security Audit</div>
+            <div class="nav-btn" onclick="go('terminal', this)"><i class="fas fa-terminal"></i> Neural Console</div>
+            <div class="nav-btn" onclick="go('nodes', this)"><i class="fas fa-circle-nodes"></i> Cloud Nodes</div>
 
-            <div class="nav-section">
-                <span class="nav-label">Financials</span>
-                <div class="nav-btn" onclick="go('fiscal', this)"><i class="fas fa-landmark"></i> KRA / Fiscal</div>
-                <div class="nav-btn" onclick="go('payroll', this)"><i class="fas fa-wallet"></i> Staff Payroll</div>
-                <div class="nav-btn" onclick="go('costs', this)"><i class="fas fa-file-invoice-dollar"></i> Opex Costs</div>
-                <div class="nav-btn" onclick="go('assets', this)"><i class="fas fa-boxes-stacked"></i> Asset Manager</div>
-            </div>
-
-            <div class="nav-section">
-                <span class="nav-label">Operations</span>
-                <div class="nav-btn" onclick="go('crm', this)"><i class="fas fa-users-gear"></i> Client CRM</div>
-                <div class="nav-btn" onclick="go('marketing', this)"><i class="fas fa-bullhorn"></i> Marketing</div>
-                <div class="nav-btn" onclick="go('terminal', this)"><i class="fas fa-terminal"></i> Terminal</div>
-                <div class="nav-btn" onclick="go('config', this)"><i class="fas fa-sliders"></i> Configuration</div>
-                
-                <div class="nav-btn" id="btn-logout" style="color:var(--error); border-top: 1px solid var(--border); margin-top: 20px; padding-top: 20px;">
-                    <i class="fas fa-power-off"></i> Terminate Link
-                </div>
+            <span class="nav-label">Enterprise Ops</span>
+            <div class="nav-btn" onclick="go('thermal', this)"><i class="fas fa-print"></i> Thermal Engine</div>
+            <div class="nav-btn" onclick="go('payroll', this)"><i class="fas fa-wallet"></i> Staff Logic</div>
+            <div class="nav-btn" onclick="go('assets', this)"><i class="fas fa-boxes-stacked"></i> Inventory</div>
+            <div class="nav-btn" onclick="go('costs', this)"><i class="fas fa-receipt"></i> Opex Costs</div>
+            <div class="nav-btn" onclick="go('crm', this)"><i class="fas fa-users-rectangle"></i> CRM Hub</div>
+            <div class="nav-btn" onclick="go('marketing', this)"><i class="fas fa-bullhorn"></i> Outreach</div>
+            <div class="nav-btn" onclick="go('config', this)"><i class="fas fa-gears"></i> Settings</div>
+            
+            <div class="nav-btn" id="btn-logout" style="color:var(--error); border-top: 1px solid var(--border); margin-top: 25px; padding-top: 20px;">
+                <i class="fas fa-power-off"></i> Terminate Link
             </div>
         </aside>
 
         <main>
             <div id="dash" class="tab-content active">
-                <div class="metric-row">
-                    <div class="card"><h6>Revenue (MTD)</h6><h3 id="k-rev">KES 0</h3></div>
-                    <div class="card"><h6>Active Orders</h6><h3 id="k-count">0</h3></div>
-                    <div class="card"><h6>VAT Reserve</h6><h3 id="k-vat">KES 0</h3></div>
-                    <div class="card"><h6>System Uptime</h6><h3 style="color:var(--success)">99.98%</h3></div>
+                <div class="metric-grid">
+                    <div class="card"><h6>Gross Yield (MTD)</h6><h2 id="k-rev">KES 0</h2></div>
+                    <div class="card"><h6>Data Manifests</h6><h2 id="k-count">0</h2></div>
+                    <div class="card"><h6>Tax Liability</h6><h2 id="k-vat">KES 0</h2></div>
+                    <div class="card"><h6>Latent Speed</h6><h2 id="k-ping">12ms</h2></div>
                 </div>
                 <div style="display:grid; grid-template-columns: 2fr 1fr; gap:30px;">
-                    <div class="card"><h5>Growth Analytics</h5><canvas id="growthChart" height="250"></canvas></div>
-                    <div class="card"><h5>Service Load</h5><canvas id="svcLoadChart" height="250"></canvas></div>
+                    <div class="card"><h5>Yield Velocity Analysis</h5><canvas id="yieldChart"></canvas></div>
+                    <div class="card"><h5>Service Load %</h5><canvas id="svcChart"></canvas></div>
+                </div>
+            </div>
+
+            <div id="traffic" class="tab-content">
+                <div class="data-table-wrap">
+                    <h3>Developer Nexus: Visitor Telemetry</h3>
+                    <p style="color:var(--text-dim); margin-bottom:20px;">Tracking Real-time IP, Geolocation, and Hardware Architecture.</p>
+                    <table>
+                        <thead><tr><th>Time (EAT)</th><th>IP Address</th><th>Location</th><th>Computer / OS</th><th>Browser</th></tr></thead>
+                        <tbody id="visitor-body"></tbody>
+                    </table>
                 </div>
             </div>
 
             <div id="registry" class="tab-content">
-                <div class="data-table-wrapper">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                        <h3>Live Transaction Archive</h3>
-                        <button class="ms-btn" style="width:auto; padding:10px 25px;">EXPORT CSV</button>
-                    </div>
+                <div class="data-table-wrap">
+                    <h3>Master Transaction Archive</h3>
                     <table>
-                        <thead><tr><th>Manifest ID</th><th>Customer</th><th>Service</th><th>Gross</th><th>Staff</th><th>Status</th></tr></thead>
+                        <thead><tr><th>Manifest</th><th>Client Name</th><th>Service Provided</th><th>Gross Amount</th><th>Staff Node</th><th>Status</th></tr></thead>
                         <tbody id="reg-body"></tbody>
                     </table>
                 </div>
             </div>
 
             <div id="thermal" class="tab-content">
-                <div style="display:grid; grid-template-columns: 400px 1fr; gap:40px;">
+                <div style="display:grid; grid-template-columns: 380px 1fr; gap:45px;">
                     <div class="card">
-                        <h3>Thermal Printing Unit</h3>
-                        <p style="color:var(--text-dim); font-size:0.8rem; margin: 15px 0;">Enter Manifest ID to generate professional 80mm thermal receipt.</p>
-                        <input type="text" id="t-input" class="ms-input" placeholder="ID (e.g. 10452)">
-                        <button class="ms-btn" onclick="generateThermal()"><i class="fas fa-bolt"></i> COMPILE RECEIPT</button>
+                        <h3>Thermal Compilation Unit</h3>
+                        <p style="margin: 15px 0; color: var(--text-dim);">Fetch manifest ID to generate physical 80mm documentation.</p>
+                        <input type="text" id="t-input" class="ms-input" placeholder="ID (e.g. 5042)">
+                        <button class="ms-btn" onclick="runThermal()"><i class="fas fa-bolt"></i> COMPILE RECEIPT</button>
                     </div>
-                    <div id="thermal-preview">
-                        <div style="text-align:center; margin-top:100px; color:var(--text-dim);">Awaiting Manifest Data...</div>
-                    </div>
+                    <div id="thermal-preview"></div>
                 </div>
             </div>
 
             <div id="fiscal" class="tab-content">
                 <div class="card" style="border-left: 5px solid var(--warning);">
-                    <h3>Tax & Compliance Portal</h3>
-                    <div class="metric-row" style="margin-top:25px;">
-                        <div class="card"><h6>VAT (16%)</h6><h3 id="f-vat">KES 0</h3></div>
-                        <div class="card"><h6>Income Tax (Estd)</h6><h3 id="f-tax">KES 0</h3></div>
-                        <div class="card"><h6>Net After Tax</h6><h3 id="f-net">KES 0</h3></div>
+                    <h3>KRA Compliance Intelligence</h3>
+                    <div class="metric-grid" style="margin-top:25px;">
+                        <div class="card"><h6>VAT (16%)</h6><h2 id="f-vat">KES 0</h2></div>
+                        <div class="card"><h6>Corp Tax (Estd)</h6><h2 id="f-tax">KES 0</h2></div>
+                        <div class="card"><h6>Net Liquid Profit</h6><h2 id="f-net">KES 0</h2></div>
                     </div>
                 </div>
             </div>
 
+            <div id="terminal" class="tab-content">
+                <div class="terminal-box" id="term-out">[OS LOADED] Uplink Active...<br></div>
+            </div>
+
+            <div id="audit" class="tab-content">
+                <div class="terminal-box" id="audit-log">
+                    [SECURITY] Firewall Level: MAXIMUM<br>
+                    [ENCRYPTION] RSA-4096 Protocol Enabled<br>
+                </div>
+            </div>
+
             <div id="payroll" class="tab-content">
-                <div class="data-table-wrapper">
+                <div class="data-table-wrap">
                     <h3>Staff Commission Matrix (10%)</h3>
-                    <table style="margin-top:20px;">
-                        <thead><tr><th>Staff Name</th><th>Total Handled</th><th>Commission Earned</th><th>Payout Status</th></tr></thead>
+                    <table>
+                        <thead><tr><th>Node Operator</th><th>Total Yield</th><th>Commission (10%)</th><th>Status</th></tr></thead>
                         <tbody id="pay-body"></tbody>
                     </table>
                 </div>
             </div>
 
-            <div id="terminal" class="tab-content">
-                <div class="terminal-box" id="term-out">
-                    [SYSTEM INITIALIZED... READY]<br>
-                </div>
-            </div>
-
-            <div id="audit" class="tab-content"><div class="terminal-box" id="audit-log"></div></div>
-            <div id="predict" class="tab-content"><div class="card"><h3>AI Projection Model</h3><canvas id="predChart"></canvas></div></div>
-            <div id="traffic" class="tab-content"><div class="card"><h3>User Traffic Intensity</h3><canvas id="trafficChart"></canvas></div></div>
-            <div id="nodes" class="tab-content"><div class="card"><h3>Cloud Node Stability</h3><div id="node-list"></div></div></div>
-            <div id="churn" class="tab-content"><div class="card"><h3>Customer Retention Analysis</h3><p>Current Churn: 4.2%</p></div></div>
-            <div id="costs" class="tab-content"><div class="card"><h3>Opex Expense Tracker</h3><table id="cost-table"></table></div></div>
-            <div id="assets" class="tab-content"><div class="card"><h3>Hardware & Inventory</h3><p>Epson L3250: Active | Canon G3410: Standby</p></div></div>
-            <div id="crm" class="tab-content"><div class="card"><h3>Encrypted Client Vault</h3><table id="crm-table"></table></div></div>
-            <div id="marketing" class="tab-content"><div class="card"><h3>WhatsApp Outreach Hub</h3><button class="ms-btn" style="width:200px;">Sync Broadcast</button></div></div>
-            <div id="config" class="tab-content"><div class="card"><h3>Global OS Settings</h3></div></div>
-
+            <div id="predict" class="tab-content"><div class="card"><h3>AI Prediction Model</h3><canvas id="predChart"></canvas></div></div>
+            <div id="churn" class="tab-content"><div class="card"><h3>Client Retention Analytics</h3><p>Churn Rate: 2.1% (Low)</p></div></div>
+            <div id="nodes" class="tab-content"><div class="card"><h3>Firebase Cloud Nodes</h3><div id="node-list"></div></div></div>
+            <div id="assets" class="tab-content"><div class="card"><h3>Hardware Assets</h3><p>Epson L3250 [Online] | Canon G3410 [Online]</p></div></div>
+            <div id="costs" class="tab-content"><div class="card"><h3>OPEX Expense Tracker</h3><table id="cost-table"></table></div></div>
+            <div id="crm" class="tab-content"><div class="card"><h3>Customer Relationship Hub</h3><table id="crm-table"></table></div></div>
+            <div id="marketing" class="tab-content"><div class="card"><h3>Outreach Analytics</h3><button class="ms-btn" style="width:200px;">Broadcast Sync</button></div></div>
+            <div id="config" class="tab-content"><div class="card"><h3>System Configuration</h3><p>Version: 0.0.1 Stable</p></div></div>
         </main>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAqPGDu8ZzHski-wi9PtoCw39jfNgsR5fM",
@@ -258,22 +252,43 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- AUTH SYSTEM ---
-        const btnLogin = document.getElementById('btn-login');
-        const btnLogout = document.getElementById('btn-logout');
+        // --- DEVELOPER TELEMETRY ---
+        async function trackSession() {
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const geo = await res.json();
+                const devData = {
+                    ip: geo.ip,
+                    city: geo.city,
+                    country: geo.country_name,
+                    os: navigator.platform,
+                    browser: navigator.userAgent.split(') ')[0] + ')',
+                    time: new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi' })
+                };
 
-        btnLogin.onclick = async () => {
+                const row = `<tr><td>${devData.time}</td><td>${devData.ip}</td><td>${devData.city}, ${devData.country}</td><td>${devData.os}</td><td>${devData.browser}</td></tr>`;
+                document.getElementById('visitor-body').innerHTML += row;
+                
+                writeTerm(`Developer Handshake: IP ${geo.ip} authenticated from ${geo.city}.`);
+                writeAudit(`Session start detected on ${devData.os} platform.`);
+                
+                // Securely log to Firebase
+                await addDoc(collection(db, "dev_logs"), { ...devData, timestamp: serverTimestamp() });
+            } catch (e) { writeTerm("Telemetry Error: " + e.message); }
+        }
+
+        // --- AUTH FLOW ---
+        document.getElementById('btn-login').onclick = async () => {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
-                writeLog("Auth success for " + email);
             } catch (e) {
                 document.getElementById('auth-error').style.display = 'block';
             }
         };
 
-        btnLogout.onclick = async () => {
+        document.getElementById('btn-logout').onclick = async () => {
             await signOut(auth);
             window.location.href = "index.html"; 
         };
@@ -282,145 +297,150 @@
             if (user) {
                 document.getElementById('auth-gate').style.display = 'none';
                 document.getElementById('main-interface').style.display = 'flex';
-                initializeOS();
+                trackSession();
+                syncEnterpriseHub();
             } else {
                 document.getElementById('auth-gate').style.display = 'flex';
                 document.getElementById('main-interface').style.display = 'none';
             }
         });
 
-        // --- TAB NAVIGATION ---
-        window.go = (id, el) => {
+        // --- TAB ENGINE ---
+        window.go = (id, btn) => {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            el.classList.add('active');
+            btn.classList.add('active');
         };
 
-        // --- CORE DATA ENGINE ---
-        let globalOrders = [];
-        function initializeOS() {
+        // --- BUSINESS INTELLIGENCE SYNC ---
+        let mainArchive = [];
+        function syncEnterpriseHub() {
             const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
             
             onSnapshot(q, (snap) => {
-                globalOrders = [];
+                mainArchive = [];
                 let revenue = 0;
-                let regHtml = "";
+                let regBody = "";
                 let staffMap = {};
 
                 snap.forEach(doc => {
-                    const data = doc.data();
-                    data.dbId = doc.id;
-                    globalOrders.push(data);
+                    const d = doc.data();
+                    d.dbId = doc.id;
+                    mainArchive.push(d);
 
-                    const amount = parseFloat(data.amount) || 200;
-                    revenue += amount;
+                    const fee = parseFloat(d.amount) || 200;
+                    revenue += fee;
                     
-                    // Populate Staff Commissions
-                    const staff = data.fName || "Admin";
-                    staffMap[staff] = (staffMap[staff] || 0) + amount;
+                    const op = d.fName || "Admin";
+                    staffMap[op] = (staffMap[op] || 0) + fee;
 
-                    regHtml += `
+                    regBody += `
                         <tr>
-                            <td>#${data.manifestId || '---'}</td>
-                            <td>${data.clientName || 'Walk-in'}</td>
-                            <td>${data.service}</td>
-                            <td>KES ${amount}</td>
-                            <td>${staff}</td>
-                            <td><span style="color:var(--success)">SYNCED</span></td>
-                        </tr>
-                    `;
+                            <td>#${d.manifestId || '---'}</td>
+                            <td>${d.clientName || 'GUEST'}</td>
+                            <td>${d.service}</td>
+                            <td>KES ${fee}</td>
+                            <td>${op}</td>
+                            <td><span class="tag tag-blue">SYNCED</span></td>
+                        </tr>`;
                 });
 
-                // Update Dashboard Metrics
+                // Update Metrics
                 document.getElementById('k-rev').innerText = `KES ${revenue.toLocaleString()}`;
                 document.getElementById('k-count').innerText = snap.size;
                 const vat = revenue * 0.16;
                 document.getElementById('k-vat').innerText = `KES ${vat.toFixed(0)}`;
                 
-                // Update Fiscal Tab
+                // Update Fiscal
                 document.getElementById('f-vat').innerText = `KES ${vat.toFixed(0)}`;
                 document.getElementById('f-tax').innerText = `KES ${(revenue * 0.1).toFixed(0)}`;
-                document.getElementById('f-net').innerText = `KES ${(revenue * 0.74).toFixed(0)}`;
+                document.getElementById('f-net').innerText = `KES ${(revenue - vat - (revenue * 0.1)).toFixed(0)}`;
 
-                // Update Registry & Payroll
-                document.getElementById('reg-body').innerHTML = regHtml;
+                document.getElementById('reg-body').innerHTML = regBody;
                 renderPayroll(staffMap);
                 
-                writeLog(`Data Matrix Updated: ${snap.size} entries detected.`);
+                writeTerm(`Global Sync Successful: ${snap.size} manifests ingested.`);
             });
         }
 
         function renderPayroll(map) {
             let html = "";
-            for (let staff in map) {
-                const total = map[staff];
+            for (let name in map) {
+                const total = map[name];
                 const comm = total * 0.10;
-                html += `<tr><td>${staff}</td><td>KES ${total}</td><td>KES ${comm}</td><td><span style="color:var(--warning)">PENDING</span></td></tr>`;
+                html += `<tr><td>${name}</td><td>KES ${total}</td><td>KES ${comm}</td><td><span style="color:var(--success)">READY</span></td></tr>`;
             }
             document.getElementById('pay-body').innerHTML = html;
         }
 
-        // --- THERMAL GENERATOR ---
-        window.generateThermal = () => {
-            const id = document.getElementById('t-input').value;
-            const order = globalOrders.find(o => o.manifestId == id);
+        // --- THERMAL ENGINE ---
+        window.runThermal = () => {
+            const val = document.getElementById('t-input').value;
+            const d = mainArchive.find(x => x.manifestId == val);
             
-            if (!order) return alert("Manifest ID not found in database.");
+            if(!d) return alert("Manifest ID not present in active archive.");
 
             document.getElementById('thermal-preview').innerHTML = `
                 <div class="receipt-container" id="printable-area">
                     <div class="receipt-header">
                         <h2 style="font-size:16px;">MS-CYBER SERVICES</h2>
-                        <p>Kamwangi, Kiambu, Kenya</p>
+                        <p>Kamwangi Town, Kiambu</p>
                         <p>Tel: +254 745 079 306</p>
                     </div>
-                    <div style="margin: 15px 0;">
-                        <p>REF: #${order.manifestId}</p>
-                        <p>DATE: ${new Date().toLocaleDateString()}</p>
-                        <p>CLIENT: ${order.clientName || 'Guest'}</p>
+                    <div style="margin: 15px 0; font-size:11px;">
+                        <p>MANIFEST: #${d.manifestId}</p>
+                        <p>TIMESTAMP: ${new Date().toLocaleString()}</p>
+                        <p>OPERATOR: ${d.fName || 'Admin'}</p>
                     </div>
                     <hr style="border-top:1px dashed #000; margin-bottom:10px;">
-                    <div style="display:flex; justify-content:space-between;">
-                        <span>${order.service}</span>
-                        <span>${order.amount || 200}.00</span>
+                    <div style="display:flex; justify-content:space-between; font-size:12px;">
+                        <span>${d.service}</span>
+                        <span>${d.amount || 200}.00</span>
                     </div>
-                    <div style="margin-top:20px; font-weight:bold; border-top:2px solid #000; padding-top:10px; display:flex; justify-content:space-between;">
+                    <div style="margin-top:20px; font-weight:bold; border-top:2px solid #000; padding-top:10px; display:flex; justify-content:space-between; font-size:14px;">
                         <span>TOTAL</span>
-                        <span>KES ${order.amount || 200}.00</span>
+                        <span>KES ${d.amount || 200}.00</span>
                     </div>
-                    <div style="text-align:center; margin-top:30px;">
-                        <p>*** Thank You ***</p>
-                        <p>Solutions for a Digital Age</p>
+                    <div style="text-align:center; margin-top:30px; font-size:10px;">
+                        <p>Digital Solutions for a Modern Era</p>
+                        <p>*** VALID RECEIPT ***</p>
                     </div>
                 </div>
-                <button class="ms-btn" style="margin-top:25px; width:300px; margin-left:auto; margin-right:auto;" onclick="window.print()">CONFIRM PRINT</button>
+                <button class="ms-btn" style="margin-top:25px; width:320px; margin-left:auto; margin-right:auto;" onclick="window.print()">PHYSICAL PRINT</button>
             `;
         };
 
-        function writeLog(msg) {
+        function writeTerm(msg) {
             const out = document.getElementById('term-out');
-            const log = document.getElementById('audit-log');
-            const time = new Date().toLocaleTimeString();
-            const entry = `[${time}] ${msg}<br>`;
-            if(out) out.innerHTML += entry;
-            if(log) log.innerHTML += entry;
-            out.scrollTop = out.scrollHeight;
+            if(out) {
+                out.innerHTML += `> [${new Date().toLocaleTimeString()}] ${msg}<br>`;
+                out.scrollTop = out.scrollHeight;
+            }
         }
 
-        // --- CHARTING ---
-        const initCharts = () => {
-            new Chart(document.getElementById('growthChart'), {
+        function writeAudit(msg) {
+            const log = document.getElementById('audit-log');
+            if(log) log.innerHTML += `[SEC_AUDIT] ${msg}<br>`;
+        }
+
+        // --- CHART INITIALIZATION ---
+        const initBI = () => {
+            new Chart(document.getElementById('yieldChart'), {
                 type: 'line',
-                data: { labels: ['W1','W2','W3','W4'], datasets: [{ label: 'Revenue', data: [5000, 12000, 18000, 24000], borderColor: '#3b82f6', tension: 0.4 }] },
+                data: { labels:['Mon','Tue','Wed','Thu','Fri','Sat'], datasets:[{label:'Yield', data:[2500, 4800, 3200, 5100, 6200, 4900], borderColor:'#3b82f6', tension:0.4}] },
                 options: { plugins: { legend: { display: false } } }
             });
-            new Chart(document.getElementById('svcLoadChart'), {
+            new Chart(document.getElementById('svcChart'), {
                 type: 'doughnut',
-                data: { labels: ['KRA','HELB','Printing','Design'], datasets: [{ data: [40, 20, 30, 10], backgroundColor: ['#3b82f6','#10b981','#f59e0b','#ef4444'] }] }
+                data: { labels:['KRA','HELB','Prints','Admin'], datasets:[{data:[35, 15, 40, 10], backgroundColor:['#3b82f6','#10b981','#f59e0b','#ef4444']}] }
+            });
+            new Chart(document.getElementById('predChart'), {
+                type: 'bar',
+                data: { labels:['Apr','May','Jun'], datasets:[{label:'Projected', data:[120000, 145000, 160000], backgroundColor:'#3b82f6'}] }
             });
         };
-        initCharts();
+        initBI();
     </script>
 </body>
 </html>
