@@ -3,232 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MS-CYBER OS | Maximum Enterprise Suite</title>
+    <title>MS-CYBER OS | Titan Apex Enterprise</title>
     <link rel="icon" type="image/png" href="31.png">
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&family=Orbitron:wght@500;700;900&family=JetBrains+Mono:wght@300;500;800&family=Inter:wght@300;500;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <style>
         :root {
-            --primary: #3b82f6; --p-glow: rgba(59, 130, 246, 0.35);
-            --accent: #00f2ff; --success: #10b981; --error: #ef4444; --warning: #f59e0b;
-            --bg: #010409; --surface: #0d1117; --border: rgba(255, 255, 255, 0.1);
-            --text: #f0f6fc; --text-dim: #8b949e; --panel: rgba(13, 17, 23, 0.98);
+            --primary: #3b82f6; --p-glow: rgba(59, 130, 246, 0.6);
+            --accent: #00f2ff; --accent-glow: rgba(0, 242, 255, 0.4);
+            --success: #10b981; --error: #ef4444; --warning: #f59e0b;
+            --bg: #02040a; --surface: #0d1117; --card: #161b22;
+            --border: rgba(255, 255, 255, 0.08); --text: #f0f6fc;
+            --text-dim: #8b949e; --glass: rgba(13, 17, 23, 0.85);
+            --sidebar-width: 360px;
         }
 
-        /* --- CORE ARCHITECTURE --- */
+        /* --- GLOBAL RESET & SCROLL --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-smoothing: antialiased; }
-        ::-webkit-scrollbar { width: 5px; background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
-        
-        body { 
-            background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif;
-            display: flex; height: 100vh; overflow: hidden; font-size: 13px;
-        }
+        ::-webkit-scrollbar { width: 4px; background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 50px; }
+        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; height: 100vh; overflow: hidden; display: flex; }
 
-        /* --- SECURITY LAYER: AUTHENTICATION --- */
+        /* --- AUTHENTICATION FIREWALL (EXTENDED) --- */
         #auth-gate {
-            position: fixed; inset: 0; background: var(--bg); z-index: 10000;
+            position: fixed; inset: 0; background: #000; z-index: 9999;
             display: flex; align-items: center; justify-content: center;
-            background-image: radial-gradient(circle at center, #161b22 0%, #010409 100%);
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.1), transparent),
+                radial-gradient(circle at 80% 70%, rgba(0, 242, 255, 0.05), transparent);
         }
-        .login-card {
-            background: var(--surface); padding: 60px; border-radius: 45px;
-            border: 1px solid var(--border); width: 480px; text-align: center;
-            box-shadow: 0 60px 120px -20px rgba(0,0,0,1);
-            animation: emerge 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        .login-matrix {
+            background: var(--surface); padding: 80px; border-radius: 60px;
+            border: 1px solid var(--border); width: 600px; text-align: center;
+            box-shadow: 0 100px 200px rgba(0,0,0,0.8);
+            position: relative; overflow: hidden;
         }
-        @keyframes emerge { from { opacity: 0; transform: scale(0.9); } }
-        .login-card h1 { font-family: 'Orbitron'; letter-spacing: 12px; color: var(--primary); margin-bottom: 45px; }
+        .login-matrix::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(transparent, var(--primary), transparent);
+            animation: rotate 6s linear infinite; opacity: 0.1;
+        }
+        @keyframes rotate { 100% { transform: rotate(360deg); } }
+        .login-matrix h1 { font-family: 'Orbitron'; letter-spacing: 20px; color: var(--primary); margin-bottom: 50px; font-weight: 900; }
 
-        /* --- ENTERPRISE SIDEBAR (18 TABS) --- */
+        /* --- TITAN SIDEBAR ARCHITECTURE --- */
         aside {
-            width: 340px; background: var(--panel); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; padding: 30px; overflow-y: auto;
-            backdrop-filter: blur(100px); transition: width 0.3s;
+            width: var(--sidebar-width); background: var(--glass); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; padding: 45px 30px; backdrop-filter: blur(40px);
+            z-index: 100;
         }
-        .sidebar-brand { text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 30px; margin-bottom: 30px; }
-        .sidebar-brand h2 { font-family: 'Orbitron'; font-size: 1.1rem; color: #fff; letter-spacing: 5px; }
-        .sidebar-brand span { font-size: 0.6rem; color: var(--primary); font-weight: 800; display: block; margin-top: 5px; }
+        .os-brand { margin-bottom: 50px; border-left: 4px solid var(--primary); padding-left: 25px; }
+        .os-brand h2 { font-family: 'Orbitron'; font-size: 1.4rem; letter-spacing: 8px; color: #fff; }
+        .os-brand p { font-size: 0.7rem; color: var(--accent); font-weight: 900; letter-spacing: 3px; text-transform: uppercase; margin-top: 8px; }
 
-        .nav-label { font-size: 0.62rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2.5px; padding: 20px 10px 10px; font-weight: 800; }
+        .nav-group { margin-bottom: 40px; }
+        .nav-label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 4px; padding: 15px 12px; font-weight: 800; display: block; }
         
-        .nav-btn {
-            padding: 15px 22px; border-radius: 18px; display: flex; align-items: center; gap: 18px;
-            color: var(--text-dim); cursor: pointer; transition: 0.3s; margin-bottom: 6px;
-            font-weight: 700; border: 1px solid transparent;
+        .nav-link {
+            padding: 20px 24px; border-radius: 24px; display: flex; align-items: center; gap: 20px;
+            color: var(--text-dim); cursor: pointer; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 10px; font-weight: 700; border: 1px solid transparent;
         }
-        .nav-btn i { width: 24px; font-size: 1.3rem; }
-        .nav-btn:hover { background: var(--p-glow); color: var(--primary); transform: translateX(10px); }
-        .nav-btn.active { background: var(--primary); color: white; box-shadow: 0 12px 35px var(--p-glow); }
+        .nav-link i { font-size: 1.4rem; width: 30px; transition: 0.3s; }
+        .nav-link:hover { 
+            background: rgba(59, 130, 246, 0.1); color: var(--primary); 
+            transform: translateX(10px); border-color: rgba(59, 130, 246, 0.2); 
+        }
+        .nav-link.active { 
+            background: var(--primary); color: white; 
+            box-shadow: 0 20px 40px var(--p-glow); border-color: var(--primary); 
+        }
+        .nav-link.active i { transform: scale(1.2); }
 
-        /* --- MAIN VIEWPORT --- */
-        main { flex: 1; overflow-y: auto; padding: 60px; position: relative; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: quantumSlide 0.7s cubic-bezier(0.23, 1, 0.32, 1); }
-        @keyframes quantumSlide { from { opacity: 0; transform: translateX(30px); } }
+        /* --- MAIN VIEWPORT ENGINE --- */
+        main { flex: 1; overflow-y: auto; padding: 80px; position: relative; scroll-behavior: smooth; }
+        .content-tab { display: none; }
+        .content-tab.active { display: block; animation: titanIn 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes titanIn { from { opacity: 0; transform: translateY(50px); filter: blur(10px); } }
 
-        /* --- COMPONENT UI --- */
-        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-bottom: 40px; }
-        .ms-card { background: var(--surface); border: 1px solid var(--border); padding: 35px; border-radius: 35px; position: relative; transition: 0.3s; }
-        .ms-card:hover { border-color: var(--primary); }
-        .ms-card h6 { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
-        .ms-card h2 { font-family: 'JetBrains Mono'; font-size: 2.2rem; margin-top: 15px; font-weight: 800; }
+        /* --- APEX DASHBOARD COMPONENTS --- */
+        .metric-matrix { display: grid; grid-template-columns: repeat(4, 1fr); gap: 35px; margin-bottom: 60px; }
+        .stat-card { 
+            background: var(--card); border: 1px solid var(--border); padding: 45px; 
+            border-radius: 45px; position: relative; overflow: hidden; 
+        }
+        .stat-card h6 { font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 3px; }
+        .stat-card h2 { font-family: 'JetBrains Mono'; font-size: 2.8rem; margin-top: 20px; font-weight: 800; letter-spacing: -2px; }
+        .stat-card .chart-mini { position: absolute; bottom: 0; left: 0; width: 100%; height: 60px; opacity: 0.3; }
 
-        /* --- MASTER TABLES --- */
-        .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 35px; padding: 35px; margin-top: 35px; }
-        table { width: 100%; border-collapse: separate; border-spacing: 0 15px; }
-        th { text-align: left; padding: 18px; color: var(--text-dim); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 1px solid var(--border); }
-        td { padding: 20px; background: rgba(255,255,255,0.01); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono'; font-size: 0.95rem; }
-        td:first-child { border-left: 1px solid var(--border); border-radius: 20px 0 0 20px; color: var(--primary); font-weight: 800; }
-        td:last-child { border-right: 1px solid var(--border); border-radius: 0 20px 20px 0; }
+        /* --- DATA VAULT (TABLES) --- */
+        .vault { background: var(--surface); border: 1px solid var(--border); border-radius: 50px; padding: 50px; box-shadow: 0 50px 100px rgba(0,0,0,0.5); }
+        .vault-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 20px; }
+        th { text-align: left; padding: 25px; color: var(--text-dim); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 4px; border-bottom: 1px solid var(--border); }
+        td { padding: 28px; background: rgba(255, 255, 255, 0.015); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono'; font-size: 1.1rem; }
+        td:first-child { border-left: 1px solid var(--border); border-radius: 25px 0 0 25px; color: var(--primary); font-weight: 900; }
+        td:last-child { border-right: 1px solid var(--border); border-radius: 0 25px 25px 0; }
 
-        .client-pill { background: rgba(0, 242, 255, 0.1); color: var(--accent); padding: 6px 14px; border-radius: 10px; font-weight: 800; font-size: 0.8rem; border: 1px solid var(--accent); }
+        /* --- TITAN UI ELEMENTS --- */
+        .titan-input { width: 100%; padding: 28px; background: #000; border: 1px solid var(--border); color: #fff; border-radius: 25px; margin-bottom: 30px; font-size: 1.2rem; transition: 0.4s; }
+        .titan-input:focus { border-color: var(--primary); box-shadow: 0 0 30px var(--p-glow); outline: none; }
+        .titan-btn { width: 100%; padding: 28px; background: var(--primary); border: none; color: #fff; border-radius: 25px; font-weight: 900; cursor: pointer; transition: 0.5s; display: flex; align-items: center; justify-content: center; gap: 20px; font-size: 1.3rem; text-transform: uppercase; letter-spacing: 4px; }
+        .titan-btn:hover { background: #2563eb; transform: translateY(-10px); box-shadow: 0 40px 80px var(--p-glow); }
 
-        /* --- SYSTEM INTERACTORS --- */
-        .ms-input { width: 100%; padding: 22px; background: #010409; border: 1px solid var(--border); color: #fff; border-radius: 20px; margin-bottom: 25px; font-size: 1.1rem; }
-        .ms-btn { width: 100%; padding: 22px; background: var(--primary); border: none; color: #fff; border-radius: 20px; font-weight: 800; cursor: pointer; transition: 0.4s; display: flex; align-items: center; justify-content: center; gap: 15px; font-size: 1rem; }
-        .ms-btn:hover { background: #2563eb; transform: translateY(-5px); box-shadow: 0 20px 40px var(--p-glow); }
+        /* --- DEEP INSIGHTS STYLING --- */
+        .insight-row { display: grid; grid-template-columns: 350px 1fr; gap: 60px; }
+        .identity-badge { background: rgba(0, 242, 255, 0.1); color: var(--accent); padding: 6px 15px; border-radius: 12px; font-size: 0.8rem; font-weight: 800; border: 1px solid var(--accent-glow); }
+        .action-tag { background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 5px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 800; }
 
-        /* --- CONSOLES --- */
-        .shell { background: #000; border-radius: 30px; padding: 40px; font-family: 'JetBrains Mono'; color: var(--success); height: 550px; overflow-y: auto; line-height: 2.2; border: 1px solid var(--border); font-size: 0.9rem; }
+        /* --- THERMAL COMPILER --- */
+        #thermal-canvas { width: 420px; background: #fff; color: #000; padding: 60px; margin: 0 auto; font-family: 'JetBrains Mono'; box-shadow: 0 60px 120px rgba(0,0,0,1); }
+        .thermal-meta { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 25px 0; margin: 25px 0; }
 
-        /* --- PRINTABLE THERMAL --- */
-        #thermal-print-box { width: 360px; background: #fff; color: #000; padding: 45px; margin: 0 auto; font-family: 'JetBrains Mono'; box-shadow: 0 30px 60px rgba(0,0,0,0.8); }
+        /* --- SHELL TERMINAL --- */
+        .shell-box { background: #000; border-radius: 40px; padding: 50px; font-family: 'JetBrains Mono'; color: var(--success); height: 700px; overflow-y: auto; line-height: 2.8; border: 1px solid var(--border); font-size: 1.1rem; }
 
-        /* --- ANIMATIONS --- */
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        .loader { width: 20px; height: 20px; border: 3px solid #fff; border-bottom-color: transparent; border-radius: 50%; display: inline-block; animation: spin 1s linear infinite; }
+        @media print { body * { display: none !important; } #thermal-canvas, #thermal-canvas * { display: block !important; visibility: visible; } #thermal-canvas { position: fixed; left: 0; top: 0; } }
     </style>
 </head>
 <body>
 
     <div id="auth-gate">
-        <div class="login-card">
+        <div class="login-matrix">
             <h1>MS-CYBER</h1>
-            <p style="color:var(--text-dim); margin-bottom:50px; letter-spacing:5px; font-size:0.85rem;">ENTERPRISE OPERATING SYSTEM</p>
-            <input type="email" id="login-email" class="ms-input" placeholder="Administrator ID">
-            <input type="password" id="login-pass" class="ms-input" placeholder="Encrypted Neural Key">
-            <button class="ms-btn" id="btn-login"><i class="fas fa-lock-open"></i> DECRYPT & INITIALIZE</button>
-            <p id="auth-error" style="color:var(--error); margin-top:30px; font-weight:800; display:none;">CREDENTIAL MISMATCH: ACCESS REJECTED</p>
+            <p style="color:var(--text-dim); margin-bottom:60px; letter-spacing:10px; font-size:1rem;">TITAN APEX ENTERPRISE V12</p>
+            <input type="email" id="login-email" class="titan-input" placeholder="Admin Credential Key">
+            <input type="password" id="login-pass" class="titan-input" placeholder="Neural Encryption Token">
+            <button class="titan-btn" id="btn-login"><i class="fas fa-microchip"></i> AUTHORIZE SESSION</button>
+            <p id="auth-error" style="color:var(--error); margin-top:40px; font-weight:900; display:none; letter-spacing:2px;">TERMINAL ERROR: ACCESS REJECTED</p>
         </div>
     </div>
 
     <div id="main-interface" style="display:none; width:100%; height:100%;">
         <aside>
-            <div class="sidebar-brand">
-                <h2>MS-CYBER OS</h2>
-                <span>KAMWANGI ENTERPRISE EDITION</span>
+            <div class="os-brand">
+                <h2>MS-CYBER</h2>
+                <p>Titan Apex Suite</p>
             </div>
             
-            <span class="nav-label">Financial Analytics</span>
-            <div class="nav-btn active" onclick="go('dash', this)"><i class="fas fa-grid-horizontal"></i> Dashboard</div>
-            <div class="nav-btn" onclick="go('registry', this)"><i class="fas fa-user-tie"></i> Client Manifest</div>
-            <div class="nav-btn" onclick="go('fiscal', this)"><i class="fas fa-coins"></i> KRA Fiscal Ledger</div>
-            <div class="nav-btn" onclick="go('predict', this)"><i class="fas fa-chart-line-up"></i> Market Prediction</div>
-            <div class="nav-btn" onclick="go('churn', this)"><i class="fas fa-user-slash"></i> Retention Analytics</div>
+            <div class="nav-group">
+                <span class="nav-label">Core Business Intelligence</span>
+                <div class="nav-link active" onclick="go('dash', this)"><i class="fas fa-grid-horizontal"></i> Executive Hub</div>
+                <div class="nav-link" onclick="go('registry', this)"><i class="fas fa-address-card"></i> Client Manifest</div>
+                <div class="nav-link" onclick="go('payroll', this)"><i class="fas fa-money-bill-trend-up"></i> Staff Revenue</div>
+            </div>
 
-            <span class="nav-label">Developer Dev-Ops</span>
-            <div class="nav-btn" onclick="go('traffic', this)" style="color:var(--accent);"><i class="fas fa-satellite-dish"></i> Traffic Interceptor</div>
-            <div class="nav-btn" onclick="go('audit', this)"><i class="fas fa-user-shield"></i> Security Protocol</div>
-            <div class="nav-btn" onclick="go('terminal', this)"><i class="fas fa-code-branch"></i> Neural Terminal</div>
-            <div class="nav-btn" onclick="go('nodes', this)"><i class="fas fa-server"></i> Firebase Cluster</div>
+            <div class="nav-group">
+                <span class="nav-label">Security & Telemetry</span>
+                <div class="nav-link" onclick="go('insights', this)" style="color:var(--accent);"><i class="fas fa-user-secret"></i> Deep Insights</div>
+                <div class="nav-link" onclick="go('traffic', this)"><i class="fas fa-radar"></i> Traffic Node</div>
+                <div class="nav-link" onclick="go('activity', this)"><i class="fas fa-timeline"></i> Event Ledger</div>
+                <div class="nav-link" onclick="go('terminal', this)"><i class="fas fa-terminal"></i> Neural Shell</div>
+            </div>
 
-            <span class="nav-label">Business Assets</span>
-            <div class="nav-btn" onclick="go('thermal', this)"><i class="fas fa-print"></i> Thermal Generator</div>
-            <div class="nav-btn" onclick="go('payroll', this)"><i class="fas fa-money-check-dollar"></i> Staff Payroll</div>
-            <div class="nav-btn" onclick="go('assets', this)"><i class="fas fa-microchip"></i> Hardware Diagnostics</div>
-            <div class="nav-btn" onclick="go('costs', this)"><i class="fas fa-file-invoice-dollar"></i> OPEX Ledger</div>
-            <div class="nav-btn" onclick="go('crm', this)"><i class="fas fa-id-card-clip"></i> CRM Core Vault</div>
-            <div class="nav-btn" onclick="go('marketing', this)"><i class="fas fa-tower-broadcast"></i> Outreach Sync</div>
-            <div class="nav-btn" onclick="go('config', this)"><i class="fas fa-cog"></i> System Logic</div>
+            <div class="nav-group">
+                <span class="nav-label">Operation Modules</span>
+                <div class="nav-link" onclick="go('thermal', this)"><i class="fas fa-print"></i> Thermal Engine</div>
+                <div class="nav-link" onclick="go('inventory', this)"><i class="fas fa-boxes-stacked"></i> Stock Control</div>
+                <div class="nav-link" onclick="go('sublimation', this)"><i class="fas fa-shirt"></i> Design Lab</div>
+                <div class="nav-link" onclick="go('health', this)"><i class="fas fa-microchip-ai"></i> Hardware Health</div>
+            </div>
             
-            <div class="nav-btn" id="btn-logout" style="color:var(--error); border-top: 1px solid var(--border); margin-top: 30px; padding-top: 25px;">
-                <i class="fas fa-power-off"></i> Terminate Uplink
+            <div class="nav-link" id="btn-logout" style="color:var(--error); margin-top: auto; border-top: 1px solid var(--border); padding-top: 30px;">
+                <i class="fas fa-power-off"></i> Terminate Link
             </div>
         </aside>
 
         <main>
-            <div id="dash" class="tab-content active">
-                <div class="grid-4">
-                    <div class="ms-card"><h6>Gross Revenue</h6><h2 id="k-rev">KES 0</h2></div>
-                    <div class="ms-card"><h6>Active Manifests</h6><h2 id="k-count">0</h2></div>
-                    <div class="ms-card"><h6>KRA VAT Reserve</h6><h2 id="k-vat">KES 0</h2></div>
-                    <div class="ms-card"><h6>Network Health</h6><h2 id="k-ping">7ms</h2></div>
+            <div id="dash" class="content-tab active">
+                <div class="metric-matrix">
+                    <div class="stat-card"><h6>Gross Yield (24H)</h6><h2 id="k-rev">KES 0</h2></div>
+                    <div class="stat-card"><h6>Client Influx</h6><h2 id="k-count">0</h2></div>
+                    <div class="stat-card"><h6>Tax Reserve</h6><h2 id="k-vat">KES 0</h2></div>
+                    <div class="stat-card"><h6>Cloud Latency</h6><h2 id="k-ping">3ms</h2></div>
                 </div>
-                <div style="display:grid; grid-template-columns: 2fr 1fr; gap:40px;">
-                    <div class="ms-card"><h5>Performance Velocity Curve</h5><canvas id="yieldChart" height="280"></canvas></div>
-                    <div class="ms-card"><h5>Hardware Resource Usage</h5><canvas id="resourceChart" height="280"></canvas></div>
+                <div style="display:grid; grid-template-columns: 2fr 1fr; gap:50px;">
+                    <div class="vault"><h5>Revenue Velocity (7 Day Cycle)</h5><canvas id="yieldChart" height="280"></canvas></div>
+                    <div class="vault"><h5>Service Penetration</h5><canvas id="svcChart" height="280"></canvas></div>
                 </div>
             </div>
 
-            <div id="registry" class="tab-content">
-                <div class="table-wrap">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
-                        <h3>Master Client Registry</h3>
-                        <span class="client-pill"><i class="fas fa-sync fa-spin"></i> LIVE SYNC ACTIVE</span>
+            <div id="insights" class="content-tab">
+                <div class="vault">
+                    <div class="vault-header">
+                        <h3>Deep-Scan Activity Insights</h3>
+                        <span class="identity-badge"><i class="fas fa-broadcast-tower"></i> LIVE GLOBAL TRACKING</span>
                     </div>
+                    <p style="color:var(--text-dim); margin-bottom:40px;">Detailed hardware fingerprinting of all visitors entering the MS-CYBER portal.</p>
                     <table>
-                        <thead><tr><th>Manifest</th><th>Client (Real Name)</th><th>Service Request</th><th>Fee</th><th>Node Staff</th><th>Timestamp</th></tr></thead>
+                        <thead>
+                            <tr><th>Node Identity</th><th>Real Location</th><th>Hardware Architecture</th><th>Platform Engine</th><th>Time (EAT)</th></tr>
+                        </thead>
+                        <tbody id="insight-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="activity" class="content-tab">
+                <div class="vault">
+                    <h3>System Action Logs</h3>
+                    <table>
+                        <thead><tr><th>Operator Identity</th><th>Action Executed</th><th>Module Target</th><th>Time Logged</th></tr></thead>
+                        <tbody id="activity-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="thermal" class="content-tab">
+                <div class="insight-row">
+                    <div class="stat-card">
+                        <h3>Thermal Engine</h3>
+                        <p style="margin: 30px 0; color: var(--text-dim);">Fetch manifest data to generate professional physical thermal receipts.</p>
+                        <input type="text" id="t-input" class="titan-input" placeholder="Enter Manifest ID">
+                        <button class="titan-btn" onclick="buildThermal()"><i class="fas fa-bolt"></i> COMPILE DOCUMENT</button>
+                    </div>
+                    <div id="thermal-preview">
+                        <div style="text-align:center; padding:200px; color:var(--text-dim); border:3px dashed var(--border); border-radius:60px;">Awaiting Manifest Input...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="registry" class="content-tab">
+                <div class="vault">
+                    <div class="vault-header"><h3>Master Client Manifest</h3></div>
+                    <table>
+                        <thead><tr><th>ID</th><th>Client Full Name</th><th>Applied Service</th><th>Amount (KES)</th><th>Node Operator</th></tr></thead>
                         <tbody id="reg-body"></tbody>
                     </table>
                 </div>
             </div>
 
-            <div id="traffic" class="tab-content">
-                <div class="table-wrap">
-                    <h3>Developer Telemetry: Traffic Logs</h3>
-                    <p style="color:var(--text-dim); margin-bottom:25px;">Intercepting real-time IP packets, Geolocation, and Hardware IDs.</p>
-                    <table>
-                        <thead><tr><th>Session Time</th><th>IP Identity</th><th>Global Location</th><th>Hardware Architecture</th><th>Secure Status</th></tr></thead>
-                        <tbody id="visitor-body"></tbody>
-                    </table>
-                </div>
+            <div id="terminal" class="content-tab">
+                <div class="shell-box" id="term-out">[TITAN KERNEL INITIALIZED] Awaiting Handshake...<br></div>
             </div>
 
-            <div id="thermal" class="tab-content">
-                <div style="display:grid; grid-template-columns: 420px 1fr; gap:60px;">
-                    <div class="ms-card">
-                        <h3>Thermal Documentation Engine</h3>
-                        <p style="margin: 20px 0; color: var(--text-dim); line-height: 1.6;">Retrieve database manifest to compile physical 80mm documentation for high-volume transactions.</p>
-                        <input type="text" id="t-input" class="ms-input" placeholder="ID (e.g. 1042)">
-                        <button class="ms-btn" onclick="executeThermal()"><i class="fas fa-bolt"></i> COMPILE DOCUMENT</button>
-                    </div>
-                    <div id="thermal-preview-container">
-                        <div style="text-align:center; padding:120px; color:var(--text-dim); border:2px dashed var(--border); border-radius:35px;">Uplink Required...</div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="costs" class="tab-content">
-                <div class="table-wrap">
-                    <h3>OPEX: Operational Expenses</h3>
-                    <table>
-                        <thead><tr><th>Category</th><th>Service Provider</th><th>Monthly Cost</th><th>Due Date</th><th>Priority</th></tr></thead>
-                        <tbody>
-                            <tr><td>Internet</td><td>Safaricom Fiber</td><td>KES 3,000</td><td>5th</td><td>CRITICAL</td></tr>
-                            <tr><td>Power</td><td>Kenya Power</td><td>KES 1,500</td><td>10th</td><td>HIGH</td></tr>
-                            <tr><td>Rent</td><td>Main Plaza</td><td>KES 12,000</td><td>1st</td><td>CRITICAL</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div id="terminal" class="tab-content">
-                <div class="shell" id="shell-out">[SYSTEM READY] Neural Link Online...<br></div>
-            </div>
-
-            <div id="fiscal" class="tab-content"><div class="ms-card"><h3>KRA Matrix</h3><h2 id="f-vat">KES 0</h2></div></div>
-            <div id="payroll" class="tab-content"><div class="table-wrap"><h3>Staff Payroll (10% Model)</h3><table id="pay-body"></table></div></div>
-            <div id="predict" class="tab-content"><div class="ms-card"><h3>Market Projections</h3><canvas id="marketChart"></canvas></div></div>
-            <div id="churn" class="tab-content"><div class="ms-card"><h3>Churn Analysis</h3><p>Active: 98.4%</p></div></div>
-            <div id="nodes" class="tab-content"><div class="shell" id="audit-log"></div></div>
-            <div id="assets" class="tab-content"><div class="ms-card"><h3>Hardware Diagnostics</h3><p>Epson L3250: ONLINE | Canon G3410: ONLINE</p></div></div>
-            <div id="crm" class="tab-content"><div class="table-wrap"><h3>Client Core Vault</h3></div></div>
-            <div id="marketing" class="tab-content"><div class="ms-card"><h3>Outreach Sync</h3></div></div>
-            <div id="config" class="tab-content"><div class="ms-card"><h3>Global System Settings</h3></div></div>
+            <div id="payroll" class="content-tab"><div class="vault"><h3>Staff Commission Matrix (10%)</h3><table id="pay-body"></table></div></div>
+            <div id="traffic" class="content-tab"><div class="vault"><h3>Live Traffic Node</h3><table id="traffic-body"></table></div></div>
+            <div id="inventory" class="content-tab"><div class="stat-card"><h3>Inventory Control</h3><p>Sublimation Inks: 85% | A4 Paper: 12 Reams</p></div></div>
+            <div id="sublimation" class="content-tab"><div class="vault"><h3>Sublimation Design Lab</h3><p>A4 Sublimation Image Upscaling Engine [READY]</p></div></div>
+            <div id="health" class="content-tab"><div class="stat-card"><h3>Epson L380 / Canon G3410 Diagnostics</h3><p>Status: OPTIMAL</p></div></div>
+            <div id="config" class="content-tab"><div class="stat-card"><h3>Global Configuration</h3></div></div>
         </main>
     </div>
 
@@ -250,160 +269,169 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- DEV-OPS TRAFFIC INTERCEPTOR ---
-        async function runTrafficScan() {
+        // --- TITAN DEEP TRACKING (PUBLIC TRACKING) ---
+        async function initiateTracking(identity) {
             try {
                 const res = await fetch('https://ipapi.co/json/');
                 const data = await res.json();
-                const session = {
-                    t: new Date().toLocaleTimeString('en-GB'),
-                    ip: data.ip,
-                    loc: `${data.city}, ${data.country_name}`,
-                    hw: navigator.platform,
-                    st: "ENCRYPTED"
-                };
-                const row = `<tr><td>${session.t}</td><td>${session.ip}</td><td>${session.loc}</td><td>${session.hw}</td><td><span style="color:var(--success)">SECURE</span></td></tr>`;
-                document.getElementById('visitor-body').innerHTML += row;
                 
-                shellLog(`Traffic Intercepted: Node ${data.ip} authenticated via ${data.city}.`);
-                await addDoc(collection(db, "telemetry"), { ...session, timestamp: serverTimestamp() });
-            } catch (e) { shellLog("Telemetry Error: Link Broken."); }
+                const fingerprint = {
+                    time: new Date().toLocaleTimeString('en-GB'),
+                    user: identity || "UNAUTHORIZED_GUEST",
+                    location: `${data.city}, ${data.country_name}`,
+                    hw: navigator.platform,
+                    os: navigator.userAgent.split(')')[0].split('(')[1],
+                    ip: data.ip
+                };
+
+                // Public Tracking: Save to Insight Vault
+                await addDoc(collection(db, "insight_vault"), { ...fingerprint, timestamp: serverTimestamp() });
+                
+                logTerminal(`Security Handshake: ${fingerprint.user} identified from ${fingerprint.location}`);
+                trackEvent("SESSION_START", "Authentication");
+            } catch (e) { logTerminal("Telemetry Failure: DNS Interrupted."); }
         }
 
-        // --- AUTH PROTOCOL ---
+        async function trackEvent(action, module) {
+            const log = {
+                time: new Date().toLocaleTimeString(),
+                user: auth.currentUser ? auth.currentUser.email : "GUEST",
+                action: action,
+                module: module
+            };
+            await addDoc(collection(db, "activity_ledger"), { ...log, timestamp: serverTimestamp() });
+        }
+
+        // --- AUTHENTICATION FLOW ---
         document.getElementById('btn-login').onclick = async () => {
             const btn = document.getElementById('btn-login');
-            btn.innerHTML = `<span class="loader"></span> AUTHENTICATING...`;
+            btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> ENCRYPTING...`;
             const e = document.getElementById('login-email').value;
             const p = document.getElementById('login-pass').value;
             try { 
                 await signInWithEmailAndPassword(auth, e, p); 
             } catch (err) { 
                 document.getElementById('auth-error').style.display='block'; 
-                btn.innerHTML = `<i class="fas fa-lock-open"></i> DECRYPT & INITIALIZE`;
+                btn.innerHTML = `<i class="fas fa-microchip"></i> AUTHORIZE SESSION`;
             }
         };
 
         document.getElementById('btn-logout').onclick = async () => {
             await signOut(auth);
-            window.location.href = "index.html";
+            window.location.reload();
         };
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById('auth-gate').style.display = 'none';
                 document.getElementById('main-interface').style.display = 'flex';
-                runTrafficScan();
-                syncEnterpriseData();
-            } else {
-                document.getElementById('auth-gate').style.display = 'flex';
-                document.getElementById('main-interface').style.display = 'none';
+                initiateTracking(user.email);
+                syncCoreData();
+                syncInsights();
+                syncActivityLogs();
             }
         });
 
-        // --- TAB NAVIGATION ENGINE ---
+        // --- NAVIGATION ARCHITECTURE ---
         window.go = (id, btn) => {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.content-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             btn.classList.add('active');
+            trackEvent("VIEW_MODULE", id.toUpperCase());
         };
 
-        // --- BUSINESS INTELLIGENCE (BI) SYNC ---
-        let globalArchive = [];
-        function syncEnterpriseData() {
-            const q = query(collection(db, "orders"), orderBy("timestamp", "desc"));
-            onSnapshot(q, (snap) => {
-                globalArchive = [];
-                let revenue = 0; let rowHtml = ""; let staffMatrix = {};
-
+        // --- DATA SYNCHRONIZATION (INSIGHTS) ---
+        function syncInsights() {
+            onSnapshot(query(collection(db, "insight_vault"), orderBy("timestamp", "desc")), (snap) => {
+                let h = "";
                 snap.forEach(doc => {
                     const d = doc.data();
-                    globalArchive.push(d);
-                    const cost = parseFloat(d.amount) || 200;
-                    revenue += cost;
-                    
-                    const op = d.fName || "Admin";
-                    staffMatrix[op] = (staffMatrix[op] || 0) + cost;
-
-                    rowHtml += `
-                        <tr>
-                            <td>#${d.manifestId || '---'}</td>
-                            <td><b style="color:var(--accent)">${d.clientName || 'UNKNOWN'}</b></td>
-                            <td>${d.service}</td>
-                            <td>KES ${cost}</td>
-                            <td>${op}</td>
-                            <td>${d.timestamp ? new Date(d.timestamp.seconds*1000).toLocaleTimeString() : 'Pending'}</td>
-                        </tr>`;
+                    h += `<tr><td><span class="identity-badge">${d.user}</span></td><td>${d.location}</td><td>${d.hw}</td><td>${d.os}</td><td>${d.time}</td></tr>`;
                 });
-
-                document.getElementById('k-rev').innerText = `KES ${revenue.toLocaleString()}`;
-                document.getElementById('k-count').innerText = snap.size;
-                const vat = revenue * 0.16;
-                document.getElementById('k-vat').innerText = `KES ${vat.toFixed(0)}`;
-                document.getElementById('f-vat').innerText = `KES ${vat.toFixed(0)}`;
-                document.getElementById('reg-body').innerHTML = rowHtml;
-                buildStaffPayroll(staffMatrix);
-                shellLog(`Cluster Sync Complete: ${snap.size} manifests parsed.`);
+                document.getElementById('insight-body').innerHTML = h;
             });
         }
 
-        function buildStaffPayroll(map) {
-            let h = "<thead><tr><th>Staff Node</th><th>Total Revenue</th><th>Earnings (10%)</th></tr></thead><tbody>";
-            for(let n in map) { const v = map[n]; h += `<tr><td>${n}</td><td>KES ${v}</td><td>KES ${v*0.1}</td></tr>`; }
-            document.getElementById('pay-body').innerHTML = h + "</tbody>";
+        function syncActivityLogs() {
+            onSnapshot(query(collection(db, "activity_ledger"), orderBy("timestamp", "desc")), (snap) => {
+                let h = "";
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    h += `<tr><td>${d.user}</td><td><span class="action-tag">${d.action}</span></td><td>${d.module}</td><td>${d.time}</td></tr>`;
+                });
+                document.getElementById('activity-body').innerHTML = h;
+            });
         }
 
-        // --- THERMAL COMPILATION (REAL NAMES) ---
-        window.executeThermal = () => {
-            const id = document.getElementById('t-input').value;
-            const d = globalArchive.find(x => x.manifestId == id);
-            
-            if(!d) return alert("System Fault: Manifest ID not found.");
+        // --- CORE BUSINESS BI ---
+        let manifestData = [];
+        function syncCoreData() {
+            onSnapshot(query(collection(db, "orders"), orderBy("timestamp", "desc")), (snap) => {
+                manifestData = []; let gross = 0; let rows = ""; let staffMap = {};
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    manifestData.push(d);
+                    const amt = parseFloat(d.amount) || 0;
+                    gross += amt;
+                    const op = d.fName || "Staff";
+                    staffMap[op] = (staffMap[op] || 0) + amt;
+                    rows += `<tr><td>#${d.manifestId}</td><td><b>${d.clientName}</b></td><td>${d.service}</td><td>KES ${amt}</td><td>${op}</td></tr>`;
+                });
+                document.getElementById('k-rev').innerText = `KES ${gross.toLocaleString()}`;
+                document.getElementById('k-count').innerText = snap.size;
+                document.getElementById('k-vat').innerText = `KES ${(gross * 0.16).toFixed(0)}`;
+                document.getElementById('reg-body').innerHTML = rows;
+                
+                let ph = "<thead><tr><th>Operator</th><th>Net Revenue</th><th>10% Commission</th></tr></thead><tbody>";
+                for(let k in staffMap) { ph += `<tr><td>${k}</td><td>KES ${staffMap[k]}</td><td>KES ${staffMap[k]*0.1}</td></tr>`; }
+                document.getElementById('pay-body').innerHTML = ph + "</tbody>";
+                logTerminal(`BI Refresh: ${snap.size} manifests ingested successfully.`);
+            });
+        }
 
-            document.getElementById('thermal-preview-container').innerHTML = `
-                <div id="thermal-print-box">
-                    <center>
-                        <h2 style="font-size:20px;">MS-CYBER SERVICES</h2>
-                        <p style="font-size:12px;">Kamwangi Town, Kiambu</p>
-                        <p style="font-size:12px;">Contact: +254 745 079 306</p>
-                    </center>
-                    <hr style="margin:25px 0; border:1px dashed #000;">
-                    <p><b>CLIENT:</b> ${d.clientName || 'GUEST'}</p>
-                    <p><b>REF ID:</b> #${d.manifestId}</p>
-                    <p><b>OP:</b> ${d.fName || 'Admin'}</p>
-                    <p><b>DATE:</b> ${new Date().toLocaleString()}</p>
-                    <hr style="margin:25px 0; border:1px dashed #000;">
-                    <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:15px;">
-                        <span>${d.service}</span>
-                        <span>KES ${d.amount || 200}.00</span>
+        // --- THERMAL COMPILER ---
+        window.buildThermal = () => {
+            const val = document.getElementById('t-input').value;
+            const data = manifestData.find(x => x.manifestId == val);
+            if(!data) return alert("System Error: Manifest ID not found.");
+            
+            document.getElementById('thermal-preview').innerHTML = `
+                <div id="thermal-canvas">
+                    <center><h2 style="font-family:'Orbitron';">MS-CYBER</h2><p>Kamwangi Town, Kiambu</p><p>+254 745 079 306</p></center>
+                    <div class="thermal-meta">
+                        <p><b>CLIENT:</b> ${data.clientName}</p>
+                        <p><b>REF NO:</b> #${data.manifestId}</p>
+                        <p><b>OP NAME:</b> ${data.fName}</p>
+                        <p><b>DATE:</b> ${new Date().toLocaleString()}</p>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-weight:800; font-size:18px;">
+                        <span>${data.service}</span>
+                        <span>KES ${data.amount}.00</span>
                     </div>
                     <hr style="margin:25px 0; border:2px solid #000;">
-                    <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:bold;">
-                        <span>NET TOTAL</span>
-                        <span>KES ${d.amount || 200}.00</span>
+                    <div style="display:flex; justify-content:space-between; font-size:24px; font-weight:900;">
+                        <span>TOTAL</span>
+                        <span>KES ${data.amount}.00</span>
                     </div>
-                    <center style="margin-top:50px; font-size:11px;">
-                        <p>AUTHENTICATED DIGITAL SERVICE</p>
-                        <p>Powering Kiambu's Digital Future</p>
-                    </center>
+                    <center style="margin-top:50px;"><p>--- POWERED BY MS-CYBER OS ---</p></center>
                 </div>
-                <button class="ms-btn" style="margin-top:35px; width:360px; margin-left:auto; margin-right:auto;" onclick="window.print()"><i class="fas fa-print"></i> TRIGGER PRINT</button>
+                <button class="titan-btn" style="margin-top:30px;" onclick="window.print()">TRIGGER PRINT</button>
             `;
+            trackEvent("PRINT_RECEIPT", data.manifestId);
         };
 
-        function shellLog(m) {
-            const s = document.getElementById('shell-out');
+        function logTerminal(m) {
+            const s = document.getElementById('term-out');
             if(s) { s.innerHTML += `> [${new Date().toLocaleTimeString()}] ${m}<br>`; s.scrollTop = s.scrollHeight; }
         }
 
-        // --- CHART DATA SCIENCE ---
-        const loadCharts = () => {
-            new Chart(document.getElementById('yieldChart'), { type:'line', data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat'], datasets:[{label:'Yield', data:[2500,4800,3100,6200,5400,7100], borderColor:'#3b82f6', tension:0.4}]}, options:{plugins:{legend:{display:false}}}});
-            new Chart(document.getElementById('resourceChart'), { type:'doughnut', data:{labels:['Epson','Canon','Server'], datasets:[{data:[45,35,20], backgroundColor:['#3b82f6','#10b981','#f59e0b']}]}});
-            new Chart(document.getElementById('marketChart'), { type:'bar', data:{labels:['Apr','May','Jun'], datasets:[{label:'Projected', data:[120000,150000,180000], backgroundColor:'#3b82f6'}]}});
+        // --- APEX ANALYTICS ---
+        const initApex = () => {
+            new Chart(document.getElementById('yieldChart'), { type:'line', data:{labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets:[{label:'Revenue', data:[4000,6500,5200,9000,7500,12000,8000], borderColor:'#3b82f6', tension:0.4, fill:true, backgroundColor:'rgba(59,130,246,0.1)'}]}});
+            new Chart(document.getElementById('svcChart'), { type:'doughnut', data:{labels:['KRA','Prints','Sublimation','Other'], datasets:[{data:[40,30,20,10], backgroundColor:['#3b82f6','#10b981','#f59e0b','#ef4444']}]}});
         };
-        loadCharts();
+        initApex();
     </script>
 </body>
 </html>
