@@ -3,424 +3,255 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MS-CYBER PREMIER PLATINUM v21.0 | Kamwangi HQ</title>
+    <title>MS CYBER | Elite Digital Government & Online Services Portal</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="31.png">
+    <link rel="apple-touch-icon" href="31.png">
+    <link rel="shortcut icon" href="31.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    
     <style>
-        /* ================================================================
-           MS-CYBER OS HIGH-END DESIGN SYSTEM
-           ================================================================ */
         :root {
-            --primary: #2563eb; --primary-glow: rgba(37, 99, 235, 0.4);
-            --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
-            --bg: #010409; --surface: #0d1117; --sidebar: #010409;
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.4);
+            --accent: #f59e0b;
+            --bg-body: #020617;
+            --bg-glass: rgba(15, 23, 42, 0.8);
             --border: rgba(255, 255, 255, 0.08);
-            --text: #f0f6fc; --text-dim: #8b949e;
-            --font-main: 'Plus Jakarta Sans', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --success: #10b981;
+            --radius-xl: 28px;
+            --radius-md: 16px;
+            --transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* --- Global Reset --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg-body); color: var(--text-main); line-height: 1.7; overflow-x: hidden; scroll-behavior: smooth; }
         
-        body { 
-            background: var(--bg); 
-            color: var(--text); 
-            font-family: var(--font-main); 
-            display: flex; 
-            height: 100vh; 
-            overflow: hidden; 
+        /* --- Ticker System --- */
+        .system-ticker {
+            position: fixed; top: 0; width: 100%; height: 45px;
+            background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(20px);
+            z-index: 5000; display: flex; align-items: center; border-bottom: 1px solid var(--border);
         }
-
-        /* 1. ADMIN LOGIN GATE (LOGOUT DESTINATION) */
-        #auth-gate { 
-            position: fixed; inset: 0; background: var(--bg); z-index: 10000; 
-            display: flex; align-items: center; justify-content: center; 
-            background-image: radial-gradient(circle at center, #111 0%, #010409 100%);
+        .ticker-brand {
+            background: linear-gradient(90deg, var(--primary), #8b5cf6);
+            color: white; padding: 0 1.5rem; height: 100%;
+            display: flex; align-items: center; font-size: 0.7rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
         }
-        .auth-card { 
-            background: var(--surface); border: 1px solid var(--border); padding: 60px; 
-            border-radius: 40px; width: 480px; text-align: center; 
-            box-shadow: 0 0 120px var(--primary-glow); 
-            animation: cardFadeIn 0.6s ease;
+        .ticker-content {
+            display: inline-block; white-space: nowrap; padding-left: 100%;
+            animation: tickerFlow 30s linear infinite; font-weight: 600; font-size: 0.8rem;
         }
-        @keyframes cardFadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes tickerFlow { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* 2. INSIGHT SHIELD */
-        #insight-shield { 
-            position: fixed; inset: 0; background: rgba(0,0,0,0.97); z-index: 9000; 
-            display: none; align-items: center; justify-content: center; backdrop-filter: blur(30px);
+        /* --- Navigation --- */
+        nav {
+            position: fixed; top: 45px; width: 100%; padding: 1.5rem 8%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 4000; transition: var(--transition); background: transparent;
         }
+        nav.sticky { background: rgba(2, 6, 23, 0.98); padding: 1rem 8%; border-bottom: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .logo { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 900; color: #fff; text-decoration: none; }
+        .logo span { color: var(--primary); text-shadow: 0 0 15px var(--primary-glow); }
+        
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text-dim); font-size: 0.85rem; font-weight: 700; text-transform: uppercase; transition: 0.3s; }
+        .nav-links a:hover { color: var(--primary); }
 
-        /* 3. SIDEBAR NAVIGATION */
-        aside { 
-            width: 320px; background: var(--sidebar); border-right: 1px solid var(--border); 
-            display: flex; flex-direction: column; padding: 40px 20px; 
+        /* --- Buttons --- */
+        .btn {
+            padding: 0.8rem 2rem; border-radius: var(--radius-md); font-weight: 800; cursor: pointer;
+            transition: var(--transition); text-decoration: none; display: inline-flex; align-items: center; gap: 10px; border: none;
         }
-        .brand-box { margin-bottom: 50px; padding: 0 15px; }
-        .brand-box h1 { font-family: 'Outfit'; font-size: 2rem; letter-spacing: -1px; }
-        .status-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 10px var(--success); }
+        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 10px 25px var(--primary-glow); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 35px var(--primary-glow); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: #fff; }
 
-        .nav-link { 
-            padding: 16px 20px; border-radius: 15px; display: flex; align-items: center; gap: 15px; 
-            color: var(--text-dim); cursor: pointer; margin-bottom: 8px; font-weight: 600; font-size: 0.95rem;
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh; display: flex; align-items: center; padding: 0 8%;
+            background: radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.1), transparent);
+            position: relative;
         }
-        .nav-link:hover { background: rgba(255,255,255,0.05); color: #fff; transform: translateX(8px); }
-        .nav-link.active { background: var(--primary); color: #fff; box-shadow: 0 10px 25px var(--primary-glow); }
-        .nav-label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2.5px; padding: 30px 20px 12px; opacity: 0.6; }
+        .hero-content { max-width: 800px; z-index: 10; }
+        .hero-content h1 { font-size: 5rem; font-family: 'Orbitron'; font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
+        .hero-content h1 span { color: var(--primary); }
+        .hero-content p { font-size: 1.2rem; color: var(--text-dim); margin-bottom: 2.5rem; }
 
-        /* 4. MAIN VIEWPORT */
-        main { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: radial-gradient(circle at top right, #0d1117, #010409); }
-        header { 
-            height: 110px; border-bottom: 1px solid var(--border); display: flex; 
-            align-items: center; justify-content: space-between; padding: 0 50px; 
-            background: rgba(1, 4, 9, 0.8); backdrop-filter: blur(20px); z-index: 100;
+        /* --- Sections --- */
+        section { padding: 100px 8%; }
+        .glass-card { 
+            background: var(--bg-glass); border: 1px solid var(--border); 
+            border-radius: var(--radius-xl); padding: 3rem; backdrop-filter: blur(20px);
+            transition: var(--transition);
         }
-        .view-content { flex: 1; overflow-y: auto; padding: 50px; scroll-behavior: smooth; }
-        .view-section { display: none; }
-        .view-section.active { display: block; animation: slideUp 0.5s cubic-bezier(0.23, 1, 0.32, 1); }
+        .glass-card:hover { border-color: var(--primary); transform: translateY(-10px); }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* 5. DATA CARDS & TABLES */
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; margin-bottom: 40px; }
-        .card { background: var(--surface); border: 1px solid var(--border); padding: 35px; border-radius: 25px; }
-        .card h4 { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 15px; }
-        .card .val { font-size: 2rem; font-weight: 800; font-family: var(--font-mono); color: #fff; }
-
-        table { width: 100%; border-collapse: separate; border-spacing: 0; }
-        th { text-align: left; padding: 20px; font-size: 0.8rem; color: var(--text-dim); border-bottom: 2px solid var(--border); }
-        td { padding: 20px; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
-        tr:hover td { background: rgba(255,255,255,0.02); }
-
-        /* 6. INPUTS & BUTTONS */
-        .ms-input { 
-            width: 100%; padding: 18px 25px; background: #000; border: 1px solid var(--border); 
-            border-radius: 15px; color: #fff; font-size: 1.1rem; margin-bottom: 20px; 
+        /* --- Form --- */
+        .input-group { margin-bottom: 1.5rem; }
+        .input-group label { display: block; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; margin-bottom: 0.5rem; color: var(--text-dim); }
+        input, select, textarea {
+            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+            padding: 1.2rem; border-radius: var(--radius-md); color: #fff; font-size: 1rem;
         }
-        .ms-btn { 
-            padding: 18px 30px; border-radius: 15px; border: none; cursor: pointer; 
-            font-weight: 800; display: flex; align-items: center; justify-content: center; 
-            gap: 12px; font-size: 1.05rem; width: 100%;
-        }
-        .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 5px 15px var(--primary-glow); }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 25px var(--primary-glow); }
-        .btn-success { background: var(--success); color: #fff; }
-        .btn-danger { background: var(--danger); color: #fff; }
+        input:focus { border-color: var(--primary); outline: none; }
 
-        /* 7. THERMAL RECEIPT SYSTEM */
-        #receipt-output { display: flex; justify-content: center; padding-top: 20px; }
-        .receipt-container { 
-            background: #fff; color: #000; padding: 40px; width: 380px; 
-            font-family: var(--font-mono); font-size: 12px; line-height: 1.6; border: 1px solid #ddd;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        /* --- Admin Environment (Invisible until toggled) --- */
+        #admin-panel {
+            position: fixed; inset: 0; background: #010409; z-index: 9999;
+            display: none; padding: 50px; overflow-y: auto;
         }
-        .receipt-hr { border-top: 1.5px dashed #000; margin: 15px 0; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
 
-        @media print {
-            body * { visibility: hidden; }
-            #receipt-output, #receipt-output * { visibility: visible; }
-            #receipt-output { position: fixed; left: 0; top: 0; width: 80mm; padding: 0; }
-            .no-print { display: none !important; }
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 3rem; }
+            .nav-links { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <div id="auth-gate">
-        <div class="auth-card">
-            <h1 style="font-family:'Outfit'; font-size:2.5rem; margin-bottom:10px;">MS-CYBER</h1>
-            <p style="color:var(--text-dim); margin-bottom:40px; font-size:1rem;">Kamwangi Town HQ | Administrative Node</p>
-            
-            <input type="email" id="login-email" class="ms-input" placeholder="Admin Email (Firebase)">
-            <input type="password" id="login-password" class="ms-input" placeholder="Master Password">
-            
-            <button class="ms-btn btn-primary" id="auth-btn">
-                <i class="fas fa-shield-check"></i> AUTHORIZE LOGIN
-            </button>
-            <p id="auth-err" style="color:var(--danger); margin-top:20px; font-size:0.9rem; display:none; font-weight:700;">ERROR: UNAUTHORIZED CREDENTIALS</p>
+    <div class="system-ticker">
+        <div class="ticker-brand"><i class="fas fa-bolt"></i> MS Terminal</div>
+        <div class="ticker-scroll-area">
+            <div class="ticker-content">System Online: 2026 KRA Individual Returns Active. | New Service: Ardhisasa Land Search Support. | WhatsApp Hotline: 0745079306. | Secure Data Processing Enabled.</div>
         </div>
     </div>
 
-    <div id="insight-shield">
-        <div class="auth-card" style="width: 440px;">
-            <div style="font-size: 4rem; color: var(--warning); margin-bottom: 20px;"><i class="fas fa-lock-keyhole"></i></div>
-            <h3>Financial Security Gate</h3>
-            <p style="color:var(--text-dim); margin-bottom:30px; font-size:0.9rem;">Please enter your Master PIN to view revenue insights.</p>
-            <input type="password" id="insight-pass" class="ms-input" placeholder="Enter Master Key" style="text-align:center; letter-spacing:8px;">
-            <div style="display:flex; gap:15px;">
-                <button class="ms-btn btn-primary" style="flex:2" onclick="verifyInsight()">UNLOCK DATA</button>
-                <button class="ms-btn" style="flex:1; background:#222; color:#fff;" onclick="closeShield()">CANCEL</button>
+    <nav id="navbar">
+        <a href="#" class="logo">MS <span>CYBER</span></a>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#track">Tracking</a></li>
+            <li><a href="#ops">Operations</a></li>
+        </ul>
+        <div style="display: flex; gap: 15px;">
+            <button onclick="toggleAdmin(true)" class="btn btn-outline"><i class="fas fa-lock"></i> Staff Login</button>
+            <a href="#apply" class="btn btn-primary">New Session</a>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div style="color: var(--primary); font-weight: 800; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 1rem;">Government Services Simplified</div>
+            <h1>Elite <span>Digital</span> Solutions.</h1>
+            <p>Your premier gateway for secure KRA filings, E-Citizen applications, and academic registrations in Kamwangi. Professionalism, Speed, and Security.</p>
+            <div style="display: flex; gap: 20px;">
+                <a href="#apply" class="btn btn-primary">Start Application</a>
+                <a href="#services" class="btn btn-outline">View Capabilities</a>
             </div>
         </div>
-    </div>
+    </section>
 
-    <aside class="no-print">
-        <div class="brand-box">
-            <h1>MS-CYBER OS</h1>
-            <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
-                <div class="status-dot"></div>
-                <span style="font-size:0.7rem; font-weight:800; color:var(--success); text-transform:uppercase;">Node Active: Kamwangi</span>
-            </div>
+    <section id="apply">
+        <div class="glass-card" style="max-width: 900px; margin: 0 auto;">
+            <h2 style="font-family:'Orbitron'; margin-bottom: 2rem; text-align: center;">Service Manifest</h2>
+            <form id="orderForm">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="input-group">
+                        <label>Legal Name</label>
+                        <input type="text" id="name" placeholder="John Doe" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="phone" placeholder="0712345678" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Select Service</label>
+                    <select id="service">
+                        <option>KRA Individual Returns</option>
+                        <option>NTSA Smart DL Renewal</option>
+                        <option>Good Conduct Application</option>
+                        <option>KUCCPS Course Revision</option>
+                        <option>Business Registration</option>
+                        <option>Other Services</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Details / Reference Numbers</label>
+                    <textarea id="notes" rows="4" placeholder="Enter ID Numbers, PINs, or special instructions..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Initialize Session</button>
+            </form>
         </div>
+    </section>
 
-        <div style="flex:1; overflow-y:auto;">
-            <div class="nav-label">Core Operations</div>
-            <div class="nav-link" data-tab="dash"><i class="fas fa-chart-mixed"></i> Insights/Dashboard</div>
-            <div class="nav-link" data-tab="sales"><i class="fas fa-clipboard-list"></i> Sales Registry</div>
-            <div class="nav-link active" data-tab="thermal"><i class="fas fa-print"></i> Thermal Station</div>
-
-            <div class="nav-label">Business Control</div>
-            <div class="nav-link" data-tab="kra"><i class="fas fa-landmark"></i> KRA Portal</div>
-            <div class="nav-link" data-tab="stock"><i class="fas fa-boxes-stacked"></i> Inventory</div>
-            <div class="nav-link" data-tab="staff"><i class="fas fa-user-tie"></i> Staff Mgmt</div>
-
-            <div class="nav-label">System Health</div>
-            <div class="nav-link" data-tab="net"><i class="fas fa-microchip"></i> Network & Hardware</div>
-            <div class="nav-link" data-tab="logs"><i class="fas fa-code"></i> System Logs</div>
-            <div class="nav-link" data-tab="settings"><i class="fas fa-sliders-up"></i> Settings</div>
-        </div>
-
-        <button class="ms-btn btn-danger" style="margin-top:20px;" id="logout-btn">
-            <i class="fas fa-power-off"></i> EXIT TO ADMIN GATE
-        </button>
-    </aside>
-
-    <main>
-        <header class="no-print">
+    <div id="admin-panel">
+        <div class="admin-header">
             <div>
-                <h2 id="view-title" style="font-family:'Outfit'; font-size:1.8rem;">Thermal Station</h2>
-                <p style="color:var(--text-dim); font-size:0.85rem; margin-top:5px;">Branch Node: Kamwangi | HQ: 0745079306</p>
+                <h1 style="font-family:'Orbitron'; font-size: 2.5rem;">ADMIN DASHBOARD</h1>
+                <p style="color: var(--text-dim);">Node: MS-CYBER Kamwangi HQ</p>
             </div>
-            <div style="text-align:right;">
-                <div id="live-clock" style="font-family:var(--font-mono); font-weight:800; font-size:1.2rem; color:var(--primary);">00:00:00</div>
-                <p style="font-size:0.7rem; color:var(--text-dim); margin-top:5px;" id="live-date">MARCH 17, 2026</p>
-            </div>
-        </header>
-
-        <div class="view-content">
-            <section id="tab-dash" class="view-section">
-                <div class="stats-grid">
-                    <div class="card"><h4>Gross Revenue</h4><div class="val" id="d-gross">KES 0</div></div>
-                    <div class="card"><h4>VAT (16%)</h4><div class="val" id="d-tax" style="color:var(--warning)">KES 0</div></div>
-                    <div class="card"><h4>Total Sales</h4><div class="val" id="d-qty">0</div></div>
-                    <div class="card"><h4>Net Growth</h4><div class="val" id="d-net" style="color:var(--success)">KES 0</div></div>
-                </div>
-                <div class="card" style="height:450px;"><canvas id="mainChart"></canvas></div>
-            </section>
-
-            <section id="tab-sales" class="view-section">
-                <div class="card" style="padding:0; overflow:hidden;">
-                    <table>
-                        <thead style="background:rgba(255,255,255,0.03);">
-                            <tr><th style="padding:25px;">REF ID</th><th>OPERATOR</th><th>SERVICE</th><th>AMOUNT</th><th>TIMESTAMP</th></tr>
-                        </thead>
-                        <tbody id="sales-body"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <section id="tab-thermal" class="view-section active">
-                <div style="display:grid; grid-template-columns: 1fr 400px; gap:40px; align-items: start;">
-                    <div class="card">
-                        <h3 style="margin-bottom:10px;">Thermal Compiler</h3>
-                        <p style="color:var(--text-dim); margin-bottom:30px; font-size:0.95rem;">Retrieve and format transaction data for 80mm thermal printing.</p>
-                        
-                        <label style="font-size:0.7rem; color:var(--text-dim); text-transform:uppercase; font-weight:800;">Manifest Reference</label>
-                        <input type="text" id="ref-input" class="ms-input" placeholder="Enter Reference (e.g. MS-1234)">
-                        
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-                            <button class="ms-btn btn-primary" onclick="compileReceipt()"><i class="fas fa-gears"></i> COMPILE</button>
-                            <button class="ms-btn btn-success" onclick="window.print()"><i class="fas fa-print"></i> PRINT RECEIPT</button>
-                        </div>
-                    </div>
-                    <div id="receipt-output">
-                        <div style="opacity:0.2; text-align:center; padding-top:100px;">
-                            <i class="fas fa-receipt" style="font-size:5rem; margin-bottom:20px;"></i>
-                            <p>READY FOR COMPILATION</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="tab-kra" class="view-section">
-                <div class="card">
-                    <h3>KRA ETR Node</h3>
-                    <div style="margin-top:20px; padding:30px; border-radius:20px; border:1px solid var(--success); background:rgba(16, 185, 129, 0.05);">
-                        <p style="color:var(--success); font-weight:800; font-size:1.1rem;"><i class="fas fa-circle-check"></i> TAX UPLINK ACTIVE</p>
-                        <p style="color:var(--text-dim); margin-top:10px;">All transactions are currently being mirrored to the KRA server for 16% VAT compliance.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="tab-stock" class="view-section">
-                <div class="stats-grid">
-                    <div class="card"><h4>A4 Paper</h4><div class="val">14 Reams</div></div>
-                    <div class="card"><h4>Ink Black</h4><div class="val">92%</div></div>
-                    <div class="card"><h4>Ink CMY</h4><div class="val">68%</div></div>
-                    <div class="card"><h4>Sublimation</h4><div class="val">Active</div></div>
-                </div>
-            </section>
-
-            <section id="tab-staff" class="view-section"><div class="card"><h3>Shift Management</h3><p>Tracking Operator Commissions and Hours.</p></div></section>
-            
-            <section id="tab-net" class="view-section">
-                <div class="card"><h3>Hardware Diagnostics</h3><p>Epson L3250: <span style="color:var(--success)">Online</span></p><p>Network: Safaricom Fiber 100Mbps</p></div>
-            </section>
-
-            <section id="tab-logs" class="view-section">
-                <div class="card" style="font-family:var(--font-mono); font-size:0.85rem; color:var(--text-dim); line-height:1.8;">
-                    [INFO] 08:00 System Initialization...<br>
-                    [INFO] 08:01 Firebase Authentication Connected...<br>
-                    [INFO] 08:05 Kamwangi Node Sync Success...
-                </div>
-            </section>
-
-            <section id="tab-settings" class="view-section">
-                <div class="card">
-                    <h3>Node Configuration</h3>
-                    <p>MS-CYBER SERVICES</p>
-                    <p>Phone: 0745079306</p>
-                </div>
-            </section>
+            <button onclick="logoutAdmin()" class="btn btn-primary" style="background: var(--error);">
+                <i class="fas fa-power-off"></i> EXIT TO ADMIN GATE
+            </button>
         </div>
-    </main>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        <div class="glass-card">
+            <h3 style="margin-bottom: 2rem;">Active Incoming Requests</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead style="text-align: left; color: var(--text-dim); font-size: 0.8rem;">
+                    <tr>
+                        <th style="padding: 15px;">REF ID</th>
+                        <th>CLIENT</th>
+                        <th>SERVICE</th>
+                        <th>STATUS</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-table-body">
+                    </tbody>
+            </table>
+        </div>
+    </div>
 
-        const firebaseConfig = { 
-            apiKey: "AIzaSyAqPGDu8ZzHski-wi9PtoCw39jfNgsR5fM", 
-            authDomain: "ms-cyber.firebaseapp.com", 
-            projectId: "ms-cyber", 
-            storageBucket: "ms-cyber.firebasestorage.app", 
-            messagingSenderId: "189332452684", 
-            appId: "1:189332452684:web:ff6ab7e43d72db667ecbe9" 
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-
-        // --- AUTH LOGIC (LOGOUT REDIRECT TO ADMIN GATE) ---
-        onAuthStateChanged(auth, user => {
-            const gate = document.getElementById('auth-gate');
-            if(user) {
-                gate.style.display = 'none';
-                syncData();
+    <script>
+        // Sticky Navbar Logic
+        window.addEventListener('scroll', function() {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('sticky');
             } else {
-                gate.style.display = 'flex';
-                document.getElementById('login-password').value = '';
+                nav.classList.remove('sticky');
             }
         });
 
-        document.getElementById('auth-btn').onclick = () => {
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-password').value;
-            signInWithEmailAndPassword(auth, email, pass).catch(() => {
-                document.getElementById('auth-err').style.display = 'block';
-            });
-        };
-
-        document.getElementById('logout-btn').onclick = () => {
-            signOut(auth).then(() => {
-                // Instantly reloads to the Admin Login page for easy use
-                window.location.reload(); 
-            });
-        };
-
-        // --- NAVIGATION & SECURITY ---
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.onclick = () => {
-                const target = link.getAttribute('data-tab');
-                if(target === 'dash') {
-                    document.getElementById('insight-shield').style.display = 'flex';
+        // Admin Security Toggles
+        function toggleAdmin(show) {
+            const panel = document.getElementById('admin-panel');
+            if(show) {
+                const pin = prompt("ENTER MASTER PIN TO ACCESS TERMINAL:");
+                if(pin === "0745079306") {
+                    panel.style.display = "block";
+                    document.body.style.overflow = "hidden";
                 } else {
-                    switchTab(target);
+                    alert("UNAUTHORIZED ACCESS DENIED");
                 }
-            };
-        });
-
-        window.verifyInsight = () => {
-            const pin = document.getElementById('insight-pass').value;
-            if(pin === "0745079306") {
-                closeShield(); switchTab('dash');
-            } else { alert("ACCESS DENIED: MASTER PIN INCORRECT"); }
-        };
-
-        window.closeShield = () => {
-            document.getElementById('insight-shield').style.display = 'none';
-            document.getElementById('insight-pass').value = '';
-        };
-
-        function switchTab(id) {
-            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            document.getElementById('tab-'+id).classList.add('active');
-            document.querySelector(`[data-tab="${id}"]`).classList.add('active');
-            document.getElementById('view-title').innerText = document.querySelector(`[data-tab="${id}"]`).innerText;
+            }
         }
 
-        // --- TIME ENGINE ---
-        setInterval(() => {
-            document.getElementById('live-clock').innerText = new Date().toLocaleTimeString();
-        }, 1000);
-
-        // --- DATA SYNCHRONIZATION ---
-        let orders = [];
-        function syncData() {
-            onSnapshot(query(collection(db, "orders"), orderBy("timestamp", "desc")), snap => {
-                orders = []; let gross = 0; let rows = '';
-                snap.forEach(doc => {
-                    const d = doc.data(); orders.push(d);
-                    let p = d.service.toLowerCase().includes('helb') ? 500 : 200;
-                    gross += p;
-                    rows += `<tr><td style="color:var(--primary); font-weight:800; padding:25px;">#${d.manifestId}</td><td>${d.fName || 'ADMIN'}</td><td>${d.service}</td><td style="font-weight:700;">KES ${p}</td><td style="color:var(--text-dim); font-size:0.75rem;">${d.timestamp?.toDate().toLocaleTimeString()}</td></tr>`;
-                });
-                document.getElementById('sales-body').innerHTML = rows;
-                document.getElementById('d-gross').innerText = `KES ${gross.toLocaleString()}`;
-                document.getElementById('d-tax').innerText = `KES ${(gross * 0.16).toFixed(0)}`;
-                document.getElementById('d-qty').innerText = snap.size;
-                document.getElementById('d-net').innerText = `KES ${(gross * 0.74).toFixed(0)}`;
-                updateChart(gross);
-            });
+        function logoutAdmin() {
+            // Smart Logout: Returns to the admin dashboard gate/refreshes
+            if(confirm("Securely exit the administrative session?")) {
+                document.getElementById('admin-panel').style.display = "none";
+                document.body.style.overflow = "auto";
+                window.location.reload(); // Returns to main state for easy reuse
+            }
         }
 
-        // --- THERMAL COMPILER ---
-        window.compileReceipt = () => {
-            const r = orders.find(o => o.manifestId == document.getElementById('ref-input').value);
-            if(!r) return alert("SEARCH ERROR: Reference not found in Registry.");
-            document.getElementById('receipt-output').innerHTML = `
-                <div class="receipt-container">
-                    <center>
-                        <h2 style="font-size:22px; font-family:'Outfit';">MS-CYBER SERVICES</h2>
-                        <p style="font-weight:bold;">KAMWANGI TOWN HQ</p>
-                        <p>P.O. Box 91-01004 Kanjuku</p>
-                        <p>Tel: 0745079306</p>
-                    </center>
-                    <div class="receipt-hr"></div>
-                    <div style="display:flex; justify-content:space-between;"><span>Ref No:</span><span>#${r.manifestId}</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span>Date:</span><span>${new Date().toLocaleDateString()}</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span>Operator:</span><span>${r.fName || 'ADMIN'}</span></div>
-                    <div class="receipt-hr"></div>
-                    <div style="display:flex; justify-content:space-between; font-weight:bold;"><span>${r.service}</span><span>200.00</span></div>
-                    <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:16px; font-weight:800;"><span>TOTAL:</span><span>KES 200.00</span></div>
-                    <div class="receipt-hr"></div>
-                    <center><p>Your Partner in Digital Excellence</p><p style="font-size:10px;">*** System Generated Receipt ***</p></center>
-                </div>`;
+        // Form Handling
+        document.getElementById('orderForm').onsubmit = function(e) {
+            e.preventDefault();
+            const orderId = "MS-" + Math.floor(1000 + Math.random() * 9000);
+            alert("SUCCESS! Your Order ID is: " + orderId + "\nKeep this to track your service.");
         };
-
-        function updateChart(val) {
-            new Chart(document.getElementById('mainChart'), {
-                type: 'line',
-                data: { labels: ['08:00', '12:00', '16:00', '20:00'], datasets: [{ label: 'Performance (KES)', data: [val/5, val/2.5, val/1.5, val], borderColor: '#2563eb', tension: 0.4, fill: true, backgroundColor: 'rgba(37, 99, 235, 0.1)', borderWidth: 4, pointRadius: 5 }] },
-                options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } } }
-            });
-        }
     </script>
 </body>
 </html>
