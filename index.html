@@ -819,4 +819,312 @@ kiwa.html
         if(sessionStorage.getItem('staff_jwt')) initAdminHub();
     </script>
 </body>
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nebula Weather Pro | Animated Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.2);
+            --text: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #0f172a;
+            transition: background 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* BACKGROUND THEMES */
+        .bg-sunny { background: radial-gradient(circle at top right, #ff8e53, #ff6b6b, #4facfe); }
+        .bg-rainy { background: radial-gradient(circle at top left, #1e3c72, #2a5298, #000428); }
+        .bg-cloudy { background: radial-gradient(circle at top, #4b5563, #1f2937, #111827); }
+        .bg-night { background: radial-gradient(circle at 50% 0%, #1e293b, #0f172a, #000000); }
+
+        /* ANIMATED SEARCH */
+        .search-box {
+            width: 100%;
+            max-width: 450px;
+            margin-bottom: 25px;
+            z-index: 100;
+            animation: fadeInDown 0.8s ease;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 18px 28px;
+            border-radius: 40px;
+            border: 1px solid var(--border);
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .search-box input:focus { 
+            border-color: #fff; 
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* MAIN CARD ANIMATIONS */
+        .main-card {
+            width: 100%;
+            max-width: 450px;
+            background: var(--glass);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 40px 30px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: cardReveal 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: transform 0.3s ease;
+        }
+        .main-card:hover { transform: translateY(-5px); }
+
+        .location-label { font-size: 1.3rem; font-weight: 300; letter-spacing: 1px; }
+        .local-time { font-size: 0.9rem; opacity: 0.6; margin-top: 8px; font-weight: 300; }
+        
+        .temp-big { 
+            font-size: 6.5rem; 
+            font-weight: 600; 
+            line-height: 1; 
+            margin: 20px 0;
+            background: linear-gradient(to bottom, #fff, rgba(255,255,255,0.4));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulseText 3s ease-in-out infinite;
+        }
+
+        .weather-icon { 
+            font-size: 5.5rem; 
+            display: block; 
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* FORECAST SECTIONS WITH STAGGER */
+        .section-title { 
+            width: 100%; 
+            max-width: 450px; 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            margin: 15px 0 12px; 
+            opacity: 0.5; 
+            letter-spacing: 3px; 
+            text-transform: uppercase;
+            animation: fadeIn 1.5s ease;
+        }
+        
+        .hourly-wrap {
+            width: 100%;
+            max-width: 450px;
+            overflow-x: auto;
+            display: flex;
+            gap: 15px;
+            padding: 10px 5px 20px;
+            scrollbar-width: none;
+        }
+        .hourly-item {
+            min-width: 85px;
+            background: var(--glass);
+            padding: 20px 10px;
+            border-radius: 25px;
+            text-align: center;
+            border: 1px solid var(--border);
+            opacity: 0;
+            animation: slideLeft 0.6s ease forwards;
+        }
+
+        .daily-wrap {
+            width: 100%;
+            max-width: 450px;
+            background: var(--glass);
+            border-radius: 35px;
+            padding: 25px;
+            border: 1px solid var(--border);
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease;
+        }
+        .daily-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+        }
+        .daily-row:hover { transform: scale(1.02); background: rgba(255,255,255,0.05); border-radius: 10px; padding-left: 10px; padding-right: 10px; }
+
+        /* KEYFRAMES */
+        @keyframes cardReveal {
+            from { opacity: 0; transform: scale(0.9) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        @keyframes pulseText {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        @keyframes slideLeft {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-night">
+
+    <div class="search-box">
+        <input type="text" id="citySearch" placeholder="Search City (e.g. Nairobi, Tokyo)..." onkeypress="if(event.key==='Enter') searchCity()">
+    </div>
+
+    <main class="main-card">
+        <div class="location-label">📍 <span id="location">Detecting...</span></div>
+        <div class="local-time" id="localTime">--:--</div>
+        <span class="weather-icon" id="icon">⌛</span>
+        <div class="temp-big" id="temp">--°</div>
+        <p id="desc" style="letter-spacing: 1px; font-weight: 300;">Synchronizing with Satellite</p>
+    </main>
+
+    <div class="section-title">Hourly Forecast</div>
+    <div class="hourly-wrap" id="hourlyList"></div>
+
+    <div class="section-title">7-Day Outlook</div>
+    <div class="daily-wrap" id="dailyList"></div>
+
+    <script>
+        let clockInterval;
+        const WMO_MAP = {
+            0: { label: "Clear Sky", icon: "☀️", bg: "bg-sunny" },
+            1: { label: "Mainly Clear", icon: "🌤️", bg: "bg-sunny" },
+            2: { label: "Partly Cloudy", icon: "⛅", bg: "bg-cloudy" },
+            3: { label: "Overcast", icon: "☁️", bg: "bg-cloudy" },
+            45: { label: "Foggy", icon: "🌫️", bg: "bg-cloudy" },
+            61: { label: "Slight Rain", icon: "🌧️", bg: "bg-rainy" },
+            63: { label: "Moderate Rain", icon: "🌧️", bg: "bg-rainy" },
+            95: { label: "Thunderstorm", icon: "⛈️", bg: "bg-rainy" }
+        };
+
+        async function getCityName(lat, lon) {
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                const data = await response.json();
+                return data.address.city || data.address.town || data.address.village || "My Location";
+            } catch (error) { return "My Location"; }
+        }
+
+        async function searchCity() {
+            const query = document.getElementById('citySearch').value;
+            if(!query) return;
+            const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${query}&count=1`);
+            const data = await res.json();
+            if(data.results) {
+                const { latitude, longitude, name, country } = data.results[0];
+                fetchWeather(latitude, longitude, `${name}, ${country}`);
+            }
+        }
+
+        async function fetchWeather(lat, lon, label) {
+            if (!label) label = await getCityName(lat, lon);
+            document.getElementById('location').innerText = label;
+            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=temperature_2m,weathercode&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto`);
+            const data = await res.json();
+            updateUI(data);
+            startClock(data.timezone);
+        }
+
+        function startClock(timezone) {
+            if(clockInterval) clearInterval(clockInterval);
+            const updateTime = () => {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('en-US', { timeZone: timezone, hour: '2-digit', minute: '2-digit', hour12: true });
+                document.getElementById('localTime').innerText = `Local Time: ${timeString}`;
+            };
+            updateTime();
+            clockInterval = setInterval(updateTime, 10000);
+        }
+
+        function updateUI(data) {
+            const cur = data.current_weather;
+            const weather = WMO_MAP[cur.weathercode] || { label: "Unknown", icon: "🌡️", bg: "bg-night" };
+            
+            document.body.className = weather.bg;
+            document.getElementById('temp').innerText = Math.round(cur.temperature) + "°";
+            document.getElementById('icon').innerText = weather.icon;
+            document.getElementById('desc').innerText = weather.label;
+
+            // Animated Hourly
+            const hList = document.getElementById('hourlyList');
+            hList.innerHTML = "";
+            const currentHour = new Date().getHours();
+            for(let i = 0; i < 24; i++) {
+                const temp = data.hourly.temperature_2m[i + currentHour];
+                const code = data.hourly.weathercode[i + currentHour];
+                const time = (i + currentHour) % 24;
+                if(!temp) continue;
+                
+                const item = document.createElement('div');
+                item.className = 'hourly-item';
+                item.style.animationDelay = `${i * 0.05}s`;
+                item.innerHTML = `
+                    <div style="font-size: 0.7rem; opacity: 0.6">${time}:00</div>
+                    <div style="font-size: 1.8rem; margin: 10px 0">${WMO_MAP[code]?.icon || '🌡️'}</div>
+                    <div style="font-weight: 600">${Math.round(temp)}°</div>
+                `;
+                hList.appendChild(item);
+            }
+
+            // Daily Outlook
+            const dList = document.getElementById('dailyList');
+            dList.innerHTML = "";
+            data.daily.time.forEach((date, i) => {
+                const dayName = new Date(date).toLocaleDateString('en', {weekday: 'short'});
+                const max = Math.round(data.daily.temperature_2m_max[i]);
+                const min = Math.round(data.daily.temperature_2m_min[i]);
+                const code = data.daily.weathercode[i];
+                
+                dList.innerHTML += `
+                    <div class="daily-row" style="animation: fadeInUp ${0.5 + (i * 0.1)}s ease">
+                        <div style="width: 80px; font-weight: 500">${i === 0 ? 'Today' : dayName}</div>
+                        <div style="font-size: 1.6rem; flex: 1; text-align: center">${WMO_MAP[code]?.icon || '🌡️'}</div>
+                        <div style="width: 90px; text-align: right; font-weight: 600">${max}° <span style="opacity:0.3; font-weight:300; margin-left:8px">${min}°</span></div>
+                    </div>
+                `;
+            });
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            p => fetchWeather(p.coords.latitude, p.coords.longitude), 
+            () => fetchWeather(-1.2921, 36.8219, "Nairobi, Kenya") 
+        );
+    </script>
+</body>
+</html>
 </html>
